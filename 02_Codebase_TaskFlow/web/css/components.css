@@ -1,0 +1,85 @@
+/* TaskFlow - composants reutilisables. */
+.tf-carte {
+  border: 1px solid var(--tf-couleur-bordure);
+  border-radius: var(--tf-rayon);
+  padding: var(--tf-espace-m);
+  background: var(--tf-couleur-fond-doux);
+  min-width: 170px;
+  color: var(--tf-couleur-texte-doux);
+}
+
+.tf-carte-valeur {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--tf-couleur-accent-fonce);
+}
+
+.tf-champ { display: flex; flex-direction: column; gap: var(--tf-espace-xs); }
+.tf-champ label { font-size: 0.9rem; color: var(--tf-couleur-texte-doux); }
+
+.tf-champ input,
+.tf-champ select {
+  font: inherit;
+  padding: var(--tf-espace-s);
+  border: 1px solid var(--tf-couleur-bordure);
+  border-radius: var(--tf-rayon);
+  background: var(--tf-couleur-fond);
+  color: var(--tf-couleur-texte);
+}
+
+.tf-btn {
+  font: inherit;
+  font-weight: 600;
+  color: var(--tf-couleur-fond);
+  background: var(--tf-couleur-accent);
+  border: none;
+  border-radius: var(--tf-rayon);
+  padding: var(--tf-espace-s) var(--tf-espace-l);
+  cursor: pointer;
+}
+
+.tf-btn--secondaire {
+  color: var(--tf-couleur-accent-fonce);
+  background: var(--tf-couleur-fond-doux);
+  border: 1px solid var(--tf-couleur-bordure);
+}
+
+.tf-tableau { width: 100%; border-collapse: collapse; }
+.tf-legende {
+  text-align: left;
+  padding-bottom: var(--tf-espace-s);
+  color: var(--tf-couleur-texte-doux);
+}
+.tf-tableau th,
+.tf-tableau td {
+  border: 1px solid var(--tf-couleur-bordure);
+  padding: var(--tf-espace-s);
+  text-align: left;
+}
+.tf-tableau th {
+  background: var(--tf-couleur-fond-doux);
+  color: var(--tf-couleur-accent-fonce);
+}
+
+.tf-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px var(--tf-espace-s);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--tf-couleur-fond);
+}
+.tf-badge--urgente { background: var(--tf-couleur-urgente); }
+.tf-badge--haute   { background: var(--tf-couleur-haute); }
+.tf-badge--normale { background: var(--tf-couleur-normale); }
+.tf-badge--basse   { background: var(--tf-couleur-basse); }
+
+.tf-fiche { margin-bottom: var(--tf-espace-l); }
+.tf-fiche-ref { color: var(--tf-couleur-texte-doux); margin-bottom: var(--tf-espace-m); }
+.tf-fiche-liste { display: grid; grid-template-columns: 200px 1fr; gap: var(--tf-espace-s); }
+.tf-fiche-liste dt { font-weight: 600; color: var(--tf-couleur-texte-doux); }
+
+.tf-aide { color: var(--tf-couleur-texte-doux); margin-bottom: var(--tf-espace-m); }
+.tf-echeance--proche { font-weight: 700; color: var(--tf-couleur-haute); }
+.tf-echeance--depassee { font-weight: 700; color: var(--tf-couleur-urgente); }

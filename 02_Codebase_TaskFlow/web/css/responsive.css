@@ -1,0 +1,12 @@
+/*
+ * TaskFlow - adaptations aux petits ecrans.
+ * Ce fichier est TOUJOURS charge en dernier.
+ */
+@media (max-width: 720px) {
+  .tf-entete { flex-direction: column; align-items: flex-start; }
+  .tf-principal { padding: var(--tf-espace-l) var(--tf-espace-m); }
+  .tf-indicateurs .tf-carte { min-width: 140px; flex: 1 1 140px; }
+  .tf-filtres { flex-direction: column; align-items: stretch; }
+  .tf-fiche-liste { grid-template-columns: 1fr; }
+  .tf-tableau { font-size: 0.9rem; }
+}

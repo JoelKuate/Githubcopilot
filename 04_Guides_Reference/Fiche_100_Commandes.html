@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiche des 100 commandes — GitHub Copilot · Transactis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#0E8C86;--accent2:#0B6E68;--navy:#0B2D48;--text:#16212B;--text2:#4B5C63;--card:#EAF4F3;--border:#D7E6E4;--warn:#B9740A;--bad:#C1443B;--good:#1F9D67;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.5;}
+.page{max-width:1080px;margin:0 auto;padding:44px 32px 80px;}
+h1{font-size:1.95rem;color:var(--navy);margin-bottom:.35rem;}
+.sous{color:var(--text2);margin-bottom:1.2rem;}
+.legende{display:flex;gap:1.4rem;flex-wrap:wrap;margin:1rem 0 2rem;font-size:.9rem;color:var(--text2);}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .5rem;border-radius:999px;white-space:nowrap;}
+.t-ok{background:#E3F2F1;color:var(--accent2);} .t-ref{background:#EAF0F6;color:var(--navy);} .t-non{background:#FBE5E3;color:var(--bad);}
+h2{font-size:1.15rem;color:var(--navy);margin:2.2rem 0 .3rem;padding-top:1.1rem;border-top:2px solid var(--card);}
+h2 span{display:block;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:.2rem;}
+p.intro{color:var(--text2);font-size:.95rem;margin:.4rem 0 .8rem;}
+table{border-collapse:collapse;width:100%;margin-bottom:.6rem;}
+th,td{border:1px solid var(--border);padding:.42rem .6rem;text-align:left;font-size:.92rem;vertical-align:top;}
+th{background:var(--card);color:var(--accent2);font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;}
+td.n{width:38px;text-align:right;color:var(--text2);font-variant-numeric:tabular-nums;}
+td.c{width:210px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88rem;color:var(--navy);font-weight:600;white-space:nowrap;}
+td.s{width:110px;}
+.note{background:var(--card);border-left:4px solid var(--accent);border-radius:6px;padding:.7rem 1rem;color:var(--text2);font-size:.93rem;margin:.8rem 0 0;}
+.src{font-size:.85rem;color:var(--text2);margin-top:.5rem;}
+.src a{color:var(--accent2);}
+.pdf{position:fixed;top:14px;right:18px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.55rem 1.1rem;font:600 .85rem 'Inter',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(11,45,72,.25);}
+footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--text2);font-size:.86rem;}
+@media print{.pdf{display:none;}body{font-size:9.5pt;}.page{padding:0;}h2{page-break-after:avoid;}table{page-break-inside:auto;}tr{page-break-inside:avoid;}}
+</style>
+</head>
+<body>
+<button class="pdf" onclick="window.print()">&#11015; Exporter en PDF</button>
+<div class="page">
+
+<h1>Fiche des 100 commandes</h1>
+<p class="sous">GitHub Copilot — variables de contexte, participants, commandes slash, Copilot CLI et raccourcis.<br>Formation <b>GitHub Copilot pour débutants — Transactis</b> · vérifié en septembre 2026.</p>
+
+<div class="legende">
+  <span><span class="tag t-ok">pratiqué</span> utilisé pendant la formation</span>
+  <span><span class="tag t-ref">référence</span> présenté, non pratiqué aujourd'hui</span>
+  <span><span class="tag t-non">non ouvert</span> non disponible chez Transactis</span>
+</div>
+
+<div class="note"><b>Avant toute commande</b> — la règle du guide s'applique d'abord : données <b>C2 au maximum</b>, jamais de donnée réelle, jamais de module critique de sécurité, et relecture humaine systématique. Une commande qui simplifie le travail ne change rien à ce cadre.</div>
+
+<h2><span>A · 1 à 16</span>Variables de contexte <code>#</code> — de quoi vous parlez</h2>
+<p class="intro">Elles désignent ce que Copilot doit regarder. C'est la famille la plus rentable : une bonne variable vaut mieux qu'un long paragraphe. <b>Ordre de préférence : #selection, puis #file, puis #codebase.</b></p>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Ce qu'elle ajoute au contexte</th><th class="s">Statut</th></tr>
+<tr><td class="n">1</td><td class="c">#file</td><td>Un fichier précis, désigné par son nom. Le réflexe de base.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">2</td><td class="c">#selection</td><td>Le code actuellement sélectionné dans l'éditeur. Le plus précis, le moins cher.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">3</td><td class="c">#codebase</td><td>Une recherche dans tout le projet. Coûteux : à réserver aux questions transversales.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">4</td><td class="c">#folder</td><td>Un dossier entier. Très coûteux, à réserver à une vraie question d'ensemble.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">5</td><td class="c">#problems</td><td>Les erreurs et avertissements remontés par l'éditeur.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">6</td><td class="c">#changes</td><td>Les modifications en cours, non encore validées. <b>La plus sous-utilisée.</b></td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">7</td><td class="c">#testFailure</td><td>Les informations sur le dernier test en échec.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">8</td><td class="c">#terminalSelection</td><td>Le texte sélectionné dans le terminal.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">9</td><td class="c">#terminalLastCommand</td><td>La dernière commande lancée et sa sortie.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">10</td><td class="c">#fetch</td><td>Le contenu d'une page web, à partir de son adresse.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">11</td><td class="c">#githubRepo</td><td>Une recherche de code dans un dépôt GitHub donné.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">12</td><td class="c">#block</td><td>Le bloc courant, d'après la position du curseur.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">13</td><td class="c">#line</td><td>La ligne courante.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">14</td><td class="c">#comment</td><td>Le commentaire courant.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">15</td><td class="c">#sym · #path · #project</td><td>Le symbole courant, le chemin du fichier, le contexte du projet.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">16</td><td class="c">#function · #class</td><td>La fonction, la méthode ou la classe courante. Sans objet sur un projet HTML/CSS.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+</table>
+<div class="src">Source : GitHub Docs, « Chat cheat sheet » et VS Code Docs, « Chat context ».</div>
+
+<h2><span>B · 17 à 22</span>Participants <code>@</code> — à qui vous parlez</h2>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Sa spécialité</th><th class="s">Statut</th></tr>
+<tr><td class="n">17</td><td class="c">@workspace</td><td>Le projet ouvert : organisation, fichiers, conventions.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">18</td><td class="c">@vscode</td><td>L'éditeur lui-même : réglages, commandes, extensions.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">19</td><td class="c">@terminal</td><td>Le terminal intégré et les commandes shell. Exige un terminal ouvert.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">20</td><td class="c">@github</td><td>Les données GitHub : dépôts, issues, pull requests.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">21</td><td class="c">@azure</td><td>Les services Azure, si l'extension est installée.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">22</td><td class="c">@agent</td><td>Délègue une tâche à un agent ou à un groupe d'outils.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+</table>
+<div class="src">Source : GitHub Docs, « Chat cheat sheet » · Guide des commandes VS Code, dossier 04_Guides_Reference.</div>
+
+<h2><span>C · 23 à 34</span>Commandes slash — le travail quotidien</h2>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Ce qu'elle fait</th><th class="s">Statut</th></tr>
+<tr><td class="n">23</td><td class="c">/explain</td><td>Explique un fichier, une sélection, une erreur ou un concept. <b>Atelier 1.</b></td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">24</td><td class="c">/fix</td><td>Analyse un problème sur le code ciblé et propose une correction. <b>Ateliers 2 et 4.</b></td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">25</td><td class="c">/doc</td><td>Produit un commentaire ou une documentation. <b>Atelier 5.</b></td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">26</td><td class="c">/tests</td><td>Génère des cas de test. Sans objet sur un projet HTML/CSS pur.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">27</td><td class="c">/fixTestFailure</td><td>Cible un test en échec et propose une correction.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">28</td><td class="c">/setupTests</td><td>Analyse le projet et aide à configurer un cadre de test.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">29</td><td class="c">/new</td><td>Crée la structure d'un nouveau fichier, composant ou projet.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">30</td><td class="c">/newNotebook</td><td>Génère un notebook adapté au besoin décrit.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">31</td><td class="c">/plan</td><td>Produit un plan d'implémentation avant tout code. Utile dès que la tâche touche plusieurs fichiers.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">32</td><td class="c">/search</td><td>Transforme une demande en recherche dans le projet.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">33</td><td class="c">/clear</td><td>Vide la conversation. <b>À chaque changement de tâche.</b></td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">34</td><td class="c">/help</td><td>Affiche les commandes réellement disponibles sur votre poste.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+</table>
+<div class="src">Source : GitHub Docs, « Chat cheat sheet » · Guide des commandes VS Code.</div>
+
+<h2><span>D · 35 à 42</span>Commandes slash — conversation et outils</h2>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Ce qu'elle fait</th><th class="s">Statut</th></tr>
+<tr><td class="n">35</td><td class="c">/compact</td><td>Résume et compacte l'historique pour libérer du contexte — et réduire la facture.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">36</td><td class="c">/fork</td><td>Crée une conversation dérivée de la conversation actuelle.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">37</td><td class="c">/rename</td><td>Renomme la conversation, pour la retrouver dans l'historique.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">38</td><td class="c">/debug</td><td>Ouvre la vue de débogage du chat : appels d'outils, contexte réellement envoyé.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">39</td><td class="c">/troubleshoot</td><td>Fait analyser les journaux de l'agent pour expliquer un comportement.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">40</td><td class="c">/startDebugging</td><td>Génère ou met à jour la configuration de débogage.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">41</td><td class="c">/models</td><td>Ouvre le sélecteur de modèles. <b>Commencez par le plus léger.</b></td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">42</td><td class="c">/tools</td><td>Liste les outils disponibles et permet de les activer ou désactiver.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+</table>
+<div class="src">Source : Guide des commandes VS Code, dossier 04_Guides_Reference · GitHub Docs, « Best practices ».</div>
+
+<h2><span>E · 43 à 54</span>Commandes slash — personnalisation</h2>
+<p class="intro">Les mécanismes du module 14. Chez Transactis, ces fichiers sont versionnés et partagés : <b>aucun secret, aucune adresse de serveur interne, aucune donnée réelle</b>.</p>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Ce qu'elle fait</th><th class="s">Statut</th></tr>
+<tr><td class="n">43</td><td class="c">/init</td><td>Analyse le projet et génère les instructions de base du dépôt.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">44</td><td class="c">/instructions</td><td>Ouvre la configuration des instructions personnalisées.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">45</td><td class="c">/create-instruction</td><td>Génère un fichier d'instructions ciblé, avec son <code>applyTo</code>.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">46</td><td class="c">/prompts</td><td>Ouvre la gestion des fichiers de prompt réutilisables.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">47</td><td class="c">/create-prompt</td><td>Crée un fichier <code>*.prompt.md</code>, invocable ensuite par son nom.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">48</td><td class="c">/skills</td><td>Ouvre la configuration des Agent Skills.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">49</td><td class="c">/create-skill</td><td>Crée une skill avec son <code>SKILL.md</code> et ses fichiers annexes.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">50</td><td class="c">/agents</td><td>Ouvre la gestion des agents personnalisés.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+<tr><td class="n">51</td><td class="c">/create-agent</td><td>Crée un agent spécialisé avec son rôle et ses outils.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+<tr><td class="n">52</td><td class="c">/hooks</td><td>Ouvre la configuration des hooks — scripts déclenchés automatiquement.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">53</td><td class="c">/create-hook</td><td>Génère un hook pour automatiser ou bloquer une action.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">54</td><td class="c">/plugins</td><td>Gère les plugins : paquets regroupant skills, instructions et serveurs MCP.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+</table>
+<div class="src">Source : VS Code Docs, « Custom instructions », « Prompt files », « Agent Skills » · GitHub Docs, « About plugins ».</div>
+
+<h2><span>F · 55 à 60</span>Permissions et modes — à connaître, à ne pas utiliser</h2>
+<p class="intro">Ces commandes lèvent les garde-fous. Elles heurtent les sections 3 et 6 du guide Transactis : aucune opération critique entièrement automatisée, jamais de décision déléguée.</p>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Ce qu'elle fait</th><th class="s">Statut</th></tr>
+<tr><td class="n">55</td><td class="c">/autoApprove</td><td>Active l'approbation automatique des actions de l'agent.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+<tr><td class="n">56</td><td class="c">/disableAutoApprove</td><td>Rétablit le comportement normal. <b>C'est celle-là qu'on utilise.</b></td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">57</td><td class="c">/yolo · /disableYolo</td><td>Alias historique du contournement des validations, et son annulation.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+<tr><td class="n">58</td><td class="c">/autopilot</td><td>L'agent poursuit son travail sans repasser par vous.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+<tr><td class="n">59</td><td class="c">/exitAutopilot</td><td>Quitte le mode Autopilot et rétablit les permissions par défaut.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">60</td><td class="c">/delegate</td><td>Confie une tâche à un agent distant, qui travaille seul.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+</table>
+<div class="src">Source : Guide des commandes VS Code et Copilot CLI · Guide des bonnes pratiques Sécurité — Transactis, sections 3, 4, 6 et 7.</div>
+
+<h2><span>G · 61 à 66</span>Les autres environnements</h2>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Où, et ce qu'elle fait</th><th class="s">Statut</th></tr>
+<tr><td class="n">61</td><td class="c">/optimize</td><td>Visual Studio — améliore le temps d'exécution du code sélectionné.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">62</td><td class="c">/chronicle</td><td>JetBrains — historique de la session de travail.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">63</td><td class="c">/simplify</td><td>Xcode — simplifie la sélection.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">64</td><td class="c">/remote</td><td>JetBrains et CLI — session à distance.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+<tr><td class="n">65</td><td class="c">/rename · /delete</td><td>github.com — renomme ou supprime une conversation.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">66</td><td class="c">/new</td><td>github.com — démarre une conversation sur un dépôt, sans ouvrir d'éditeur.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+</table>
+<div class="src">Source : GitHub Docs, « Chat cheat sheet ».</div>
+
+<h2><span>H · 67 à 74</span>Copilot CLI — lancement et options</h2>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Ce qu'elle fait</th><th class="s">Statut</th></tr>
+<tr><td class="n">67</td><td class="c">copilot</td><td>Lance la session interactive, à la racine du projet.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">68</td><td class="c">copilot help</td><td>Affiche l'aide générale et les options de votre version.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">69</td><td class="c">--model</td><td>Choisit le modèle au démarrage.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">70</td><td class="c">--attachment</td><td>Joint un fichier au prompt initial.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">71</td><td class="c">-C</td><td>Change de répertoire avant de démarrer.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">72</td><td class="c">--allow-tool · --deny-tool</td><td>Autorise ou interdit explicitement un outil. <b>Famille par famille, jamais tout.</b></td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">73</td><td class="c">--allow-all</td><td>Autorise tous les outils, chemins et URL d'un coup.</td><td class="s"><span class="tag t-non">non ouvert</span></td></tr>
+<tr><td class="n">74</td><td class="c">--sandbox</td><td>Active l'isolation système pour la session.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+</table>
+<div class="src">Source : GitHub Docs, « Best practices for GitHub Copilot CLI » · Guide des commandes Copilot CLI, dossier 04_Guides_Reference.</div>
+
+<h2><span>I · 75 à 86</span>Copilot CLI — piloter la session</h2>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Ce qu'elle fait</th><th class="s">Statut</th></tr>
+<tr><td class="n">75</td><td class="c">/login · /logout</td><td>Connecte ou déconnecte le compte GitHub Copilot.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">76</td><td class="c">/user show · /user switch</td><td>Affiche le compte actif, ou bascule vers un autre.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">77</td><td class="c">/session</td><td>Informations sur la session en cours.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">78</td><td class="c">/context</td><td>Répartition de la consommation de contexte. <b>Très instructif.</b></td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">79</td><td class="c">/usage</td><td>Statistiques d'utilisation de la session.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">80</td><td class="c">/compact</td><td>Compresse l'historique de la session.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">81</td><td class="c">/clear · /new</td><td>Repart d'une session propre pour une tâche sans rapport.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">82</td><td class="c">/resume · /continue</td><td>Reprend une session précédente, ou la plus récente.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">83</td><td class="c">/export · /share</td><td>Exporte la session en Markdown.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">84</td><td class="c">/add-dir · /list-dirs</td><td>Ajoute un dossier au périmètre autorisé, ou liste ceux qui le sont.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">85</td><td class="c">/reset-allowed-tools</td><td>Réinitialise les autorisations accordées. <b>À faire régulièrement.</b></td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">86</td><td class="c">/exit · /quit</td><td>Ferme Copilot CLI.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+</table>
+<div class="src">Source : Guide des commandes Copilot CLI, dossier 04_Guides_Reference · GitHub Docs, « Best practices for GitHub Copilot CLI ».</div>
+
+<h2><span>J · 87 à 94</span>Copilot CLI — travailler et faire relire</h2>
+<table>
+<tr><th class="n">#</th><th class="c">Commande</th><th>Ce qu'elle fait</th><th class="s">Statut</th></tr>
+<tr><td class="n">87</td><td class="c">/plan</td><td>Produit un plan avant tout code. <b>Le premier réflexe sur une tâche multi-fichiers.</b></td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">88</td><td class="c">/review</td><td>Revue du travail en cours.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">89</td><td class="c">/security-review</td><td>Analyse orientée sécurité. <b>Ne remplace pas la validation du référent.</b></td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">90</td><td class="c">/diff</td><td>Affiche les modifications en cours.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">91</td><td class="c">/pr · /pr view web</td><td>Consulte la pull request liée à la branche courante.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">92</td><td class="c">/pr create</td><td>Prépare une pull request à partir du travail en cours.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">93</td><td class="c">/mcp</td><td>Gère les serveurs MCP de la session. <b>Installation soumise à la DSSI.</b></td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+<tr><td class="n">94</td><td class="c">/ide</td><td>Relie la session CLI à l'éditeur ouvert.</td><td class="s"><span class="tag t-ref">référence</span></td></tr>
+</table>
+<div class="src">Source : Guide des commandes Copilot CLI · GitHub Docs, « Model Context Protocol (MCP) » · Guide Transactis, section 4.</div>
+
+<h2><span>K · 95 à 100</span>Raccourcis clavier</h2>
+<table>
+<tr><th class="n">#</th><th class="c">Raccourci</th><th>Action · Windows et Linux / macOS</th><th class="s">Statut</th></tr>
+<tr><td class="n">95</td><td class="c">Tab</td><td><b>Accepter</b> la suggestion en ligne. La touche la plus dangereuse de la journée.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">96</td><td class="c">Échap</td><td><b>Refuser</b> la suggestion. Ne rien faire revient à refuser.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">97</td><td class="c">Alt + ] · Alt + [</td><td>Suggestion suivante / précédente — Option + ] · Option + [ sur macOS.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">98</td><td class="c">Alt + \</td><td>Déclencher une suggestion — Option + \ sur macOS.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">99</td><td class="c">Ctrl + I</td><td>Ouvrir le chat en ligne sur la sélection — Cmd + I sur macOS.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+<tr><td class="n">100</td><td class="c">Ctrl + Alt + I</td><td>Ouvrir la vue Chat — Ctrl + Cmd + I sur macOS.</td><td class="s"><span class="tag t-ok">pratiqué</span></td></tr>
+</table>
+<div class="src">Source : GitHub Docs, « Keyboard shortcuts for GitHub Copilot in the IDE » — <a href="https://docs.github.com/en/copilot/reference/keyboard-shortcuts" target="_blank" rel="noopener">docs.github.com/copilot/reference/keyboard-shortcuts</a></div>
+
+<div class="note" style="margin-top:2rem;"><b>Les listes réelles dépendent de votre poste.</b> Tapez <code>#</code>, <code>@</code> ou <code>/</code> dans la zone de saisie, ou <code>/help</code> dans le terminal : ce qui s'affiche fait foi. Les noms de commandes changent plusieurs fois par an — le réflexe durable n'est pas de les retenir, c'est de savoir où vérifier.</div>
+
+<footer>
+Fiche des 100 commandes — formation <b>GitHub Copilot pour débutants · Transactis</b> — Digital House Company, hello@dhcompany.pro<br>
+Les deux guides détaillés dont cette fiche est extraite sont dans le même dossier : <b>Guide_commandes_VS_Code.md</b> et <b>Guide_commandes_Copilot_CLI.md</b>.<br>
+Sécurité et déclaration d'usage : accompagnement-securite@transactis.fr
+</footer>
+</div>
+</body>
+</html>

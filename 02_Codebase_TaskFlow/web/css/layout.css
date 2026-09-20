@@ -1,0 +1,43 @@
+/* TaskFlow - mise en page generale. */
+.tf-entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tf-espace-m);
+  padding: var(--tf-espace-m) var(--tf-espace-l);
+  border-bottom: 1px solid var(--tf-couleur-bordure);
+  background: var(--tf-couleur-fond-doux);
+}
+
+.tf-marque { font-weight: 700; color: var(--tf-couleur-accent-fonce); }
+
+.tf-nav { display: flex; gap: var(--tf-espace-m); }
+.tf-nav a[aria-current="page"] { font-weight: 700; }
+
+.tf-principal {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--tf-espace-xl) var(--tf-espace-l);
+}
+
+.tf-indicateurs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tf-espace-m);
+  margin-bottom: var(--tf-espace-l);
+}
+
+.tf-filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tf-espace-m);
+  align-items: flex-end;
+  margin-bottom: var(--tf-espace-l);
+}
+
+.tf-pied {
+  border-top: 1px solid var(--tf-couleur-bordure);
+  padding: var(--tf-espace-m) var(--tf-espace-l);
+  color: var(--tf-couleur-texte-doux);
+  font-size: 0.9rem;
+}

@@ -1,0 +1,27 @@
+/*
+ * TaskFlow - jetons de design.
+ * SOURCE UNIQUE des couleurs, espacements et rayons du projet.
+ * Aucune valeur de couleur ou d'espacement ne doit etre ecrite en dur ailleurs.
+ */
+:root {
+  --tf-couleur-fond: #ffffff;
+  --tf-couleur-fond-doux: #f2f7f7;
+  --tf-couleur-texte: #16212b;
+  --tf-couleur-texte-doux: #4b5c63;
+  --tf-couleur-accent: #0e8c86;
+  --tf-couleur-accent-fonce: #0b6e68;
+  --tf-couleur-bordure: #d7e6e4;
+  --tf-couleur-urgente: #c1443b;
+  --tf-couleur-haute: #b9740a;
+  --tf-couleur-normale: #0b6e68;
+  --tf-couleur-basse: #4b5c63;
+
+  --tf-espace-xs: 4px;
+  --tf-espace-s: 8px;
+  --tf-espace-m: 16px;
+  --tf-espace-l: 24px;
+  --tf-espace-xl: 40px;
+
+  --tf-rayon: 8px;
+  --tf-police: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}

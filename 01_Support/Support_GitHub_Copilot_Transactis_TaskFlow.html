@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Copilot — Transactis · TaskFlow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF;
+  --bg2:#F2F7F7;
+  --accent:#0E8C86;
+  --accent2:#0B6E68;
+  --navy:#0B2D48;
+  --navy2:#08202F;
+  --text:#16212B;
+  --text2:#4B5C63;
+  --card:#EAF4F3;
+  --border:#D7E6E4;
+  --good:#1F9D67;
+  --warn:#B9740A;
+  --bad:#C1443B;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
+.deck{position:relative;width:100vw;height:100vh;}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:6vh 9vw;opacity:0;transition:opacity .25s ease;overflow-y:auto;}
+.slide.active{display:flex;opacity:1;}
+.slide-tag{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:1.1rem;}
+.slide-title{font-size:2.25rem;font-weight:800;margin-bottom:1.5rem;line-height:1.22;max-width:92%;color:var(--navy);}
+.slide h3.subtitle{font-size:1.2rem;font-weight:400;color:var(--text2);margin-bottom:1.1rem;}
+ul.points{list-style:none;max-width:82%;}
+ul.points li{font-size:1.18rem;line-height:1.55;margin-bottom:.85rem;padding-left:1.8rem;position:relative;color:var(--text2);}
+ul.points li::before{content:"\203A";position:absolute;left:0;color:var(--accent2);font-weight:700;font-size:1.35rem;}
+ul.points li b, ul.points li strong{color:var(--text);font-weight:700;}
+.note{margin-top:1.6rem;padding:.95rem 1.3rem;background:var(--card);border-left:4px solid var(--accent);border-radius:6px;font-size:1rem;color:var(--text2);max-width:82%;}
+.note b{color:var(--accent2);}
+.src{margin-top:1rem;font-size:.88rem;color:var(--text2);max-width:82%;}
+.src a{color:var(--accent2);text-decoration:none;border-bottom:1px dotted var(--accent2);}
+.src a:hover{color:var(--navy);}
+.slide-cover{align-items:flex-start;background:radial-gradient(circle at 80% 20%, #E3F2F1 0%, var(--bg) 60%);}
+.cover-org{font-size:.92rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:1.8rem;}
+.cover-title{font-size:3.1rem;font-weight:800;max-width:85%;line-height:1.16;margin-bottom:1rem;color:var(--navy);}
+.cover-sub{font-size:1.3rem;color:var(--text2);max-width:75%;margin-bottom:2.2rem;}
+.cover-meta{display:flex;gap:2.4rem;flex-wrap:wrap;font-size:.98rem;color:var(--text2);}
+.cover-meta span b{color:var(--navy);display:block;font-size:1.08rem;}
+.cover-contact{position:absolute;bottom:6vh;left:9vw;font-size:.98rem;color:var(--accent2);}
+.slide-divider{align-items:center;text-align:center;background:linear-gradient(135deg, var(--bg) 0%, #E7F3F2 100%);}
+.section-tag{font-size:1rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);margin-bottom:1.1rem;}
+.section-title{font-size:2.9rem;font-weight:800;max-width:82%;line-height:1.2;margin-bottom:1rem;color:var(--navy);}
+.section-sub{font-size:1.15rem;color:var(--text2);max-width:68%;}
+.section-num{font-size:5.5rem;font-weight:800;color:var(--border);position:absolute;top:6vh;right:9vw;}
+.slide-question{background:linear-gradient(135deg,#FFF8ED 0%, var(--bg) 100%);border-top:6px solid var(--warn);}
+.q-tag{font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--warn);font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.q-question{font-size:1.65rem;font-weight:700;margin-bottom:1.3rem;max-width:88%;color:var(--navy);line-height:1.35;}
+.q-hint{font-size:1.05rem;color:var(--text2);max-width:82%;line-height:1.5;}
+.q-footer{margin-top:1.4rem;font-size:.95rem;color:var(--text2);font-style:italic;}
+.slide-anecdote{background:linear-gradient(135deg,#F0F8F7 0%, var(--bg) 100%);border-top:6px solid var(--accent);}
+.an-tag{font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.an-title{font-size:1.7rem;font-weight:700;margin-bottom:1rem;max-width:88%;color:var(--navy);}
+.an-body{font-size:1.1rem;color:var(--text2);max-width:85%;line-height:1.55;}
+.an-body b{color:var(--text);}
+.slide-quote{align-items:center;text-align:center;background:linear-gradient(135deg,var(--navy) 0%, var(--navy2) 100%);color:#fff;}
+.q-mark{font-size:4rem;color:var(--accent);line-height:1;margin-bottom:.6rem;font-family:Georgia,serif;}
+.quote-text{font-size:1.9rem;font-weight:600;max-width:78%;line-height:1.4;margin-bottom:1.4rem;}
+.quote-author{font-size:1.1rem;color:#B9D6D3;}
+.quote-author b{color:#fff;}
+.slide-demo{background:linear-gradient(135deg,#EAF4FE 0%, var(--bg) 100%);border-top:6px solid #2E7DD1;}
+.demo-tag{font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:#2E7DD1;font-weight:700;margin-bottom:1rem;}
+.demo-title{font-size:1.7rem;font-weight:700;margin-bottom:.8rem;color:var(--navy);}
+.demo-link{display:inline-block;margin-top:.6rem;background:#2E7DD1;color:#fff;padding:.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:1rem;}
+.slide-exercice{background:linear-gradient(135deg,#F0F8F7 0%, var(--bg) 100%);border-top:6px solid var(--accent);}
+.exo-tag{font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:1rem;}
+.exo-title{font-size:1.9rem;font-weight:700;margin-bottom:.6rem;color:var(--navy);}
+.exo-duree{font-size:1rem;color:var(--text2);margin-bottom:1.3rem;}
+.exo-steps{max-width:82%;padding-left:1.4rem;}
+.exo-steps li{font-size:1.12rem;color:var(--text2);margin-bottom:.65rem;line-height:1.5;}
+.exo-livrable{margin-top:1.5rem;padding:.9rem 1.2rem;background:var(--card);border-radius:8px;font-size:1.02rem;border-left:4px solid var(--good);}
+.slide-cta{align-items:center;text-align:center;background:radial-gradient(circle at 50% 30%, #E3F2F1 0%, var(--bg) 70%);}
+.slide-cta h2{font-size:2.6rem;font-weight:800;margin-bottom:1rem;color:var(--navy);}
+.slide-cta p{font-size:1.25rem;color:var(--text2);margin-bottom:1.8rem;}
+.cta-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.4rem;}
+.cta-links a{color:var(--accent2);text-decoration:none;font-size:1.1rem;font-weight:600;border-bottom:2px solid var(--accent);padding-bottom:2px;}
+table.cmp{border-collapse:collapse;max-width:92%;margin-top:1rem;}
+table.cmp th, table.cmp td{border:1px solid var(--border);padding:.65rem .95rem;font-size:1rem;text-align:left;}
+table.cmp th{background:var(--card);color:var(--accent2);}
+table.cmp td{color:var(--text2);}
+table.cmp td b{color:var(--text);}
+.two-col{display:flex;gap:2.4rem;max-width:94%;}
+.two-col .col{flex:1;}
+.two-col h4{color:var(--accent2);font-size:1.05rem;margin-bottom:.55rem;}
+.schema-box{margin-top:1.3rem;max-width:92%;}
+.schema-box svg{max-width:100%;height:auto;}
+.icon-row{display:flex;gap:1.6rem;margin-top:1.2rem;flex-wrap:wrap;}
+.icon-item{display:flex;flex-direction:column;align-items:center;gap:.4rem;width:110px;}
+.icon-item span{font-size:.82rem;color:var(--text2);text-align:center;}
+.progress-wrap{position:fixed;top:0;left:0;width:100%;height:4px;background:var(--border);z-index:50;}
+#progress{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--navy));transition:width .2s ease;}
+#counter{position:fixed;bottom:1.4vh;right:2vw;font-size:.8rem;color:var(--text2);z-index:50;letter-spacing:.05em;}
+.navbtn{position:fixed;top:50%;transform:translateY(-50%);z-index:50;background:var(--card);border:1px solid var(--border);color:var(--navy);width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;opacity:.65;transition:opacity .2s;}
+.navbtn:hover{opacity:1;}
+#prevBtn{left:1.5vw;} #nextBtn{right:1.5vw;}
+.brand-mark{position:fixed;bottom:1.4vh;left:2vw;font-size:.72rem;color:#9FBDBA;letter-spacing:.1em;z-index:50;}
+.pdf-btn{position:fixed;top:1.4vh;right:2vw;z-index:60;background:var(--accent);color:#FFFFFF;border:none;border-radius:8px;padding:.55rem 1.1rem;font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem;box-shadow:0 2px 8px rgba(11,45,72,.25);transition:background .2s;}
+.pdf-btn:hover{background:var(--accent2);}
+@media print{
+  .navbtn,#counter,.progress-wrap,.brand-mark,.pdf-btn{display:none !important;}
+  body{overflow:visible;}
+  .slide{position:relative;display:flex !important;opacity:1 !important;page-break-after:always;height:100vh;}
+}
+.mini-relance{margin-top:1.2rem;padding-top:.8rem;border-top:1px dashed var(--border);font-size:.92rem;color:var(--accent2);font-style:italic;max-width:82%;}
+/* --- Ajouts propres à ce support : reproduction institutionnelle et double piste --- */
+.slide-guide{border-top:6px solid var(--navy);background:linear-gradient(180deg,#FBFDFD 0%, var(--bg) 100%);}
+.guide-tag{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--navy);font-weight:700;margin-bottom:.4rem;}
+.guide-doc{font-size:.95rem;font-style:italic;color:var(--text2);margin-bottom:1.1rem;}
+.guide-body{border-left:4px solid var(--navy);padding:.4rem 0 .4rem 1.2rem;font-size:1.08rem;line-height:1.6;color:var(--text2);max-width:88%;}
+.guide-body ul{margin:.7rem 0 0 1.2rem;}
+.guide-body li{margin-bottom:.35rem;}
+.guide-conf{margin-top:1.4rem;font-size:.82rem;letter-spacing:.12em;color:var(--navy);font-weight:600;}
+.track{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem;border-radius:999px;margin-right:.5rem;vertical-align:middle;}
+.track-web{background:#E3F2F1;color:var(--accent2);}
+.track-java{background:#FBEEDC;color:var(--warn);}
+pre.code{background:#08202F;color:#D9EDEB;padding:1rem 1.2rem;border-radius:8px;font-size:.92rem;line-height:1.5;max-width:88%;overflow-x:auto;margin-top:.9rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;}
+pre.prompt{background:var(--card);color:var(--text);border-left:4px solid var(--accent);padding:.85rem 1.1rem;border-radius:6px;font-size:.98rem;line-height:1.5;max-width:86%;margin-top:.8rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;}
+.flowrow{display:flex;gap:.6rem;flex-wrap:wrap;margin:1.2rem 0;}
+.flowstep{border:2px solid var(--accent);border-radius:10px;padding:.7rem 1.3rem;font-weight:700;color:var(--navy);background:var(--card);}
+.flowstep.own{background:var(--navy);color:#fff;border-color:var(--navy);}
+.layers{max-width:70%;margin-top:1rem;}
+.layer{border:1px solid var(--border);border-left:5px solid var(--accent);background:var(--card);padding:.6rem 1rem;border-radius:6px;margin-bottom:.5rem;font-size:1.02rem;color:var(--text2);}
+</style>
+</head>
+<body>
+<div class="progress-wrap"><div id="progress"></div></div>
+<button class="navbtn" id="prevBtn">&lsaquo;</button>
+<button class="navbtn" id="nextBtn">&rsaquo;</button>
+<button class="pdf-btn" id="pdfBtn" title="Raccourci clavier : P">&#11015; Exporter en PDF</button>
+<div id="counter">1 / 1</div>
+<div class="brand-mark">GITHUB COPILOT — TRANSACTIS · DIGITAL HOUSE COMPANY</div>
+
+<div class="deck">
+<!-- SLIDES_START -->
+
+<section class="slide slide-cover active">
+  <div class="cover-org">Formation d'une journée — Transactis</div>
+  <div class="cover-title">GitHub Copilot pour débutants</div>
+  <div class="cover-sub">Utiliser un assistant de code de manière autonome, contrôlée et sobre, dans le cadre fixé par Transactis. Terrain d'exercice unique : <b>TaskFlow</b>. Le cours se déroule en <b>HTML/CSS</b>, sans une ligne de JavaScript ; les exercices se font au choix en HTML/CSS ou en Java.</div>
+  <div class="cover-meta">
+    <span><b>Public</b>Développeurs débutants sur Copilot</span>
+    <span><b>Prérequis</b>Aucun prérequis sur l'IA</span>
+    <span><b>Durée</b>1 journée — 09:00 à 17:45</span>
+    <span><b>Format</b>30 % apports — 70 % pratique</span>
+  </div>
+  <div class="cover-contact">Digital House Company — hello@dhcompany.pro</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Ouverture</div>
+  <h2 class="slide-title">Ce que vous saurez faire à 17h45</h2>
+  <ul class="points">
+    <li>Identifier le rôle de GitHub Copilot et ses <b>principales limites</b>.</li>
+    <li>Ouvrir et utiliser Copilot Chat dans votre environnement de développement.</li>
+    <li>Utiliser l'autocomplétion de manière <b>contrôlée</b>, et cibler un fichier, une fonction ou une sélection avant de poser une question.</li>
+    <li>Formuler une demande claire : contexte, tâche, contraintes, résultat attendu.</li>
+    <li>Comprendre et améliorer du code existant, générer des tests, vérifier le comportement obtenu.</li>
+    <li>Produire une documentation destinée à un autre développeur.</li>
+    <li>Appliquer les règles Transactis de confidentialité et de <b>validation humaine</b>.</li>
+  </ul>
+  <div class="note"><b>Critère de réussite</b> — à 17h45, vous devez pouvoir utiliser Copilot seul sur une tâche simple, sans accepter aveuglément la réponse générée.</div>
+  <div class="src">Source : Programme pédagogique « GitHub Copilot pour débutants » — Transactis / Digital House Company, dossier <b>00_Guide_Institutionnel</b>.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Ouverture</div>
+  <h2 class="slide-title">Le déroulé de la journée</h2>
+  <div class="two-col">
+    <div class="col">
+      <h4>Matin</h4>
+      <table class="cmp" style="max-width:100%;">
+        <tr><td>09:00</td><td><b>Cadre Transactis</b> — le guide de sécurité</td></tr>
+        <tr><td>09:20</td><td><b>IA générative et Copilot</b> : l'essentiel</td></tr>
+        <tr><td>09:40</td><td><b>Sécurité</b> : ce que j'envoie, ce que je n'envoie pas</td></tr>
+        <tr><td>10:05</td><td><b>L'interface</b> — prise en main</td></tr>
+        <tr><td>10:20</td><td><b>Cibler le contexte</b> — <b>#</b> <b>@</b> <b>/</b></td></tr>
+        <tr><td>10:35</td><td><b>Atelier 1</b> — comprendre du code</td></tr>
+        <tr><td>11:10</td><td><b>Bien demander</b> : prompt et contexte</td></tr>
+        <tr><td>11:40</td><td><b>Exercice guidé</b> — reformuler une demande</td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <h4>Après-midi</h4>
+      <table class="cmp" style="max-width:100%;">
+        <tr><td>13:00</td><td><b>Crédits, modèles et sobriété</b></td></tr>
+        <tr><td>13:25</td><td><b>Atelier 2</b> — analyser et améliorer</td></tr>
+        <tr><td>14:10</td><td><b>Atelier 3</b> — générer et modifier</td></tr>
+        <tr><td>15:10</td><td><b>Atelier 4</b> — vérifier plutôt que croire</td></tr>
+        <tr><td>15:50</td><td><b>Atelier 5</b> — documentation</td></tr>
+        <tr><td>16:25</td><td><b>Challenge</b> débutant</td></tr>
+        <tr><td>17:00</td><td><b>Bonnes pratiques</b> officielles</td></tr>
+        <tr><td>17:20</td><td><b>Synthèse</b> et questions</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="note">Les <b>modules 14 et 15</b> — personnalisation et écosystème — sont des <b>sections de référence</b> : parcourues en séance, relues seul ensuite. Le module 15 dit aussi ce qui <b>n'est pas ouvert</b> chez Transactis, et pourquoi.</div>
+  <div class="src">Source : Programme pédagogique « GitHub Copilot pour débutants » — Transactis / Digital House Company, dossier <b>00_Guide_Institutionnel</b>.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Méthode</div>
+  <h2 class="slide-title">Le réflexe de la journée</h2>
+  <div class="flowrow">
+    <div class="flowstep">Cibler</div>
+    <div class="flowstep">Demander</div>
+    <div class="flowstep">Lire</div>
+    <div class="flowstep own">Vérifier</div>
+    <div class="flowstep own">Tester</div>
+  </div>
+  <div class="note">Les deux dernières étapes sont les vôtres, pas celles de l'outil. C'est ce qui sépare un usage professionnel d'un copier-coller.</div>
+  <ul class="points" style="margin-top:1.2rem;">
+    <li><b>Une notion, une démonstration, une manipulation.</b> Le formateur montre, vous reproduisez, vous vérifiez.</li>
+    <li><b>Un terrain unique</b> — TaskFlow, toute la journée. <b>Un catalogue volontairement limité</b> — l'écosystème avancé reste une référence.</li>
+  </ul>
+  <div class="src">Source : Programme pédagogique « GitHub Copilot pour débutants » — Transactis / Digital House Company, dossier <b>00_Guide_Institutionnel</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">01</div>
+  <div class="section-tag">Module 1 — point de départ</div>
+  <h1 class="section-title">Le cadre Transactis</h1>
+  <p class="section-sub">Le guide des bonnes pratiques de sécurité s'applique avant toute manipulation. Il est reproduit intégralement dans les slides qui suivent.</p>
+  <div class="schema-box" style="max-width:180px;margin-left:auto;margin-right:auto;">
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60 12 L100 28 V60 c0 26-18 42-40 48-22-6-40-22-40-48V28Z" fill="none" stroke="#0B2D48" stroke-width="4"/>
+      <path d="M42 62 l12 12 24-26" fill="none" stroke="#0E8C86" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</section>
+
+<section class="slide slide-guide">
+  <div class="guide-tag">Document Transactis — reproduction intégrale</div>
+  <div class="guide-doc">Guide des bonnes pratiques Sécurité : Usage de l'Intelligence Artificielle générative</div>
+  <h2 class="slide-title">1 à 3 — Objectif, champ, principe</h2>
+  <div class="guide-body">
+    <p><b>1. Objectif du guide.</b> Ce guide a pour objectif d'encadrer l'utilisation professionnelle des systèmes d'intelligence artificielle générative afin d'en tirer des bénéfices opérationnels tout en maîtrisant les risques, la sécurité des systèmes d'information, la confidentialité des données, et la conformité réglementaire et contractuelles. Il s'inscrit dans le respect des recommandations de l'ANSSI (avril 2024) et de la politique de sécurité des systèmes d'information de Transactis.</p>
+    <p style="margin-top:.8rem;"><b>2. Champ d'application.</b> Ces bonnes pratiques s'appliquent à l'ensemble des collaborateurs, prestataires et partenaires, ainsi qu'à tous les usages d'IA générative réalisés dans le cadre professionnel, qu'ils reposent sur des solutions internes, tierces ou des services d'IA grand public.</p>
+    <p style="margin-top:.8rem;"><b>3. Principe fondamental.</b> L'IA générative est et reste un outil d'assistance. L'IA ne doit jamais être mise en situation de prendre une décision et ne se substitue pas au jugement, à l'analyse ou à la responsabilité humaine.</p></div>
+  <div class="guide-conf">Confidentialité — C1</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité : Usage de l'IA générative — Transactis, Confidentialité C1. Reproduction intégrale ; fichier d'origine dans <b>00_Guide_Institutionnel</b>.</div>
+</section>
+
+<section class="slide slide-guide">
+  <div class="guide-tag">Document Transactis — reproduction intégrale</div>
+  <div class="guide-doc">Guide des bonnes pratiques Sécurité : Usage de l'Intelligence Artificielle générative</div>
+  <h2 class="slide-title">4 à 6 — Gouvernance, données, usage</h2>
+  <div class="guide-body">
+    <p><b>4. Gestion de risque et gouvernance.</b> Tout projet ou usage d'IA générative doit faire l'objet d'une analyse de risques préalable pour évaluer la sensibilité des données, la criticité du système et les impacts potentiels sur la sécurité du SI et sur l'image de Transactis. Tout usage de l'IA de manière répétée et systématique ou structurant doit être : porté à la connaissance de la DSSI ; analysé dans le cadre de la gestion des risques SSI ; inscrit au registre des usages de l'IA de Transactis.</p>
+    <p style="margin-top:.8rem;"><b>5. Protection des données.</b> Il est strictement interdit de soumettre à une IA générative des informations sensibles (données, documents, mails, codes sources, ...), personnelles non anonymisées, contractuelles, financières ou des secrets techniques. L'IA générative mise à disposition via Workplace ou GitHub ne peut recevoir que des données classifiées C2 au maximum, conformément aux règles de classification interne.</p>
+    <p style="margin-top:.8rem;"><b>6. Usage opérationnel.</b> Aucune décision, action ou opération critique (impact sécurité, financier, juridique, réglementaire …) ne doit être entièrement automatisée par un système d'intelligence artificielle. Les résultats fournis doivent être systématiquement vérifiés, validés par l'utilisateur.</p></div>
+  <div class="guide-conf">Confidentialité — C1</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité : Usage de l'IA générative — Transactis, Confidentialité C1. Reproduction intégrale ; fichier d'origine dans <b>00_Guide_Institutionnel</b>.</div>
+</section>
+
+<section class="slide slide-guide">
+  <div class="guide-tag">Document Transactis — reproduction intégrale</div>
+  <div class="guide-doc">Guide des bonnes pratiques Sécurité : Usage de l'Intelligence Artificielle générative</div>
+  <h2 class="slide-title">7 à 9 — Code, responsabilités, contact</h2>
+  <div class="guide-body">
+    <p><b>7. Code généré par IA.</b> Le code généré par IA doit toujours être validé par un développeur référent et audité via les outils standards conformément aux règles de la PSSI. L'IA est interdite pour les modules critiques liés à la sécurité (chiffrement, contrôle d'accès, ...).</p>
+    <p style="margin-top:.8rem;"><b>8. Responsabilités.</b> Chaque utilisateur est responsable de son utilisation de l'IA générative fourni par Transactis et du respect du présent Guide.</p>
+    <p style="margin-top:.8rem;"><b>9. Contact et assistance.</b> Pour toute demande d'accompagnement ou déclaration d'usage contacter la DSSI via accompagnement-securite@transactis.fr.</p>
+    <p style="margin-top:.9rem;font-size:.95rem;">Le guide est reproduit ici <b>sans aucune modification</b>. Le fichier d'origine est joint au dossier, répertoire <b>00_Guide_Institutionnel</b>. En cas d'écart avec ce support, <b>le guide prévaut</b>.</p></div>
+  <div class="guide-conf">Confidentialité — C1</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité : Usage de l'IA générative — Transactis, Confidentialité C1. Reproduction intégrale ; fichier d'origine dans <b>00_Guide_Institutionnel</b>.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Traduction opérationnelle</div>
+  <h2 class="slide-title">Ce que le guide implique, concrètement, aujourd'hui</h2>
+  <table class="cmp">
+    <tr><th>Section du guide</th><th>Ce que vous ferez pendant la journée</th></tr>
+    <tr><td><b>3 — Principe fondamental</b></td><td>Vous lisez chaque proposition de Copilot avant de l'accepter. Jamais de validation automatique.</td></tr>
+    <tr><td><b>5 — Protection des données</b></td><td>Vous ne travaillez que sur TaskFlow, sans aucune donnée réelle. Aucun code Transactis n'est collé dans l'outil pendant la formation.</td></tr>
+    <tr><td><b>6 — Usage opérationnel</b></td><td>Chaque atelier se termine par une vérification humaine explicite : relecture, test, ou les deux.</td></tr>
+    <tr><td><b>7 — Code généré par IA</b></td><td>L'atelier 4 vous apprend à faire échouer un test avant de croire une correction. Aucun exercice ne touche au chiffrement ni au contrôle d'accès.</td></tr>
+    <tr><td><b>8 — Responsabilités</b></td><td>Ce que vous validez, vous le signez. Le challenge final vous demande d'expliquer ce que vous avez accepté et ce que vous avez refusé.</td></tr>
+  </table>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, C1, reproduit ci-dessus.</div>
+</section>
+
+<section class="slide slide-question">
+  <div class="q-tag">&#128172; Question de relance</div>
+  <div class="q-question">Dans votre travail de la semaine dernière, quel usage auriez-vous été tenté de faire qui aurait heurté la section 5 du guide ?</div>
+  <div class="q-hint">Prenez trente secondes. L'objectif n'est pas de se justifier, mais de repérer les situations où la frontière est facile à franchir sans y penser : un extrait de log collé pour comprendre une erreur, un message client recopié pour reformuler une réponse, un fichier de configuration partagé pour demander conseil.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">02</div>
+  <div class="section-tag">Module 2 — 09:20 à 09:40</div>
+  <h1 class="section-title">IA générative et Copilot : l'essentiel</h1>
+  <p class="section-sub">Vingt minutes pour comprendre ce que fait la machine, et surtout ce qu'elle ne fait pas.</p>
+  <div class="schema-box" style="max-width:180px;margin-left:auto;margin-right:auto;">
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="34" fill="none" stroke="#0B2D48" stroke-width="4"/>
+      <circle cx="46" cy="52" r="5" fill="#0E8C86"/><circle cx="74" cy="52" r="5" fill="#0E8C86"/>
+      <circle cx="60" cy="76" r="5" fill="#0E8C86"/>
+      <path d="M46 52 L74 52 L60 76 Z" fill="none" stroke="#0E8C86" stroke-width="3"/>
+    </svg>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Fondamentaux</div>
+  <h2 class="slide-title">Ce que « générative » veut dire</h2>
+  <ul class="points">
+    <li>Un programme qui <b>produit du contenu nouveau</b> — texte, code, image — plutôt que de classer ou de retrouver du contenu existant.</li>
+    <li>Il a été entraîné sur de très grands volumes de texte et de code publics, <b>jusqu'à une date de coupure</b>.</li>
+    <li>Il ne consulte pas une base de connaissances au moment où vous l'interrogez : il <b>prédit la suite la plus probable</b>.</li>
+    <li>Conséquence directe : il peut produire une réponse parfaitement formulée et parfaitement fausse.</li>
+  </ul>
+  <div class="note"><b>À retenir</b> — la qualité de forme n'est pas un indicateur de qualité de fond. C'est la raison d'être de la validation humaine exigée par la section 3 du guide.</div>
+  <div class="src">Source : GitHub Docs, « What is GitHub Copilot? » · classification usuelle de l'IA reprise par les ressources pédagogiques d'IBM et de Google Cloud.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Vocabulaire</div>
+  <h2 class="slide-title">Qu'est-ce qu'un modèle, qu'est-ce qu'un LLM ?</h2>
+  <ul class="points">
+    <li><b>Modèle</b> — le résultat concret d'un entraînement : un ensemble de paramètres numériques, souvent plusieurs milliards, interrogeable. On en change comme on change d'outil.</li>
+    <li><b>LLM</b> (grand modèle de langage) — un modèle spécialisé dans le texte et, pour Copilot, dans le code. « Grand » parce qu'il est entraîné sur des volumes massifs et compte des milliards de paramètres.</li>
+    <li>Une fois entraîné, un LLM ne fait <b>qu'une seule chose</b> : prédire le fragment suivant le plus probable, étant donné tout ce qui précède — des milliers de fois par seconde.</li>
+    <li>Deux modèles différents ont été entraînés séparément, sur des données différentes : ils donneront des réponses différentes à la même question, avec un coût différent.</li>
+  </ul>
+  <div class="note">Cette simplicité de principe explique la puissance (il a vu énormément d'exemples) <b>et</b> la limite : à aucun moment il n'y a vérification de véracité, seulement une continuation plausible.</div>
+  <div class="src">Source : GitHub Docs, « What is GitHub Copilot? » · GitHub Docs, « Supported AI models in Copilot ».</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Vocabulaire</div>
+  <h2 class="slide-title">Le token, unité de contexte et de facture</h2>
+  <ul class="points">
+    <li>Un <b>token</b> est le morceau de texte que le modèle manipule : environ trois quarts d'un mot en français, un peu plus en code.</li>
+    <li>Le modèle ne lit jamais des phrases : il traite une <b>suite de tokens</b>, l'un après l'autre.</li>
+    <li>Tout ce que vous envoyez <b>et</b> tout ce que vous recevez se compte en tokens. C'est l'unité de la facture et de la sobriété — détaillée au module 8.</li>
+  </ul>
+  <table class="cmp">
+    <tr><th>Ce que vous envoyez</th><th>Ordre de grandeur</th></tr>
+    <tr><td>« corriger le calcul des jours restants »</td><td>environ <b>9 tokens</b></td></tr>
+    <tr><td>La feuille <b>components.css</b> entière de TaskFlow</td><td>environ <b>1 200 tokens</b></td></tr>
+    <tr><td>Une réponse contenant un bloc de code</td><td>plusieurs <b>centaines de tokens</b> de sortie</td></tr>
+  </table>
+  <div class="src">Source : GitHub Docs, « Usage-based billing » — <a href="https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-individuals" target="_blank" rel="noopener">docs.github.com/copilot/concepts/billing</a> · ordres de grandeur mesurés sur la codebase TaskFlow.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Fondamentaux</div>
+  <h2 class="slide-title">Ce que GitHub Copilot est</h2>
+  <ul class="points">
+    <li>Un <b>assistant de code intégré à l'éditeur</b>, qui voit le fichier ouvert et ce que vous lui donnez comme contexte.</li>
+    <li>Il complète du code pendant que vous tapez, et répond à des questions dans une fenêtre de discussion.</li>
+    <li>Il est bon pour : expliquer du code, proposer une première version, écrire des tests, rédiger de la documentation, reformuler.</li>
+    <li>Il accélère un développeur <b>qui sait où il va</b>. Il n'apprend pas à votre place ce que fait votre code.</li>
+  </ul>
+  <div class="src">Source : GitHub Docs, « What is GitHub Copilot? » — <a href="https://docs.github.com/en/copilot/get-started/what-is-github-copilot" target="_blank" rel="noopener">docs.github.com/copilot/get-started</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Fondamentaux</div>
+  <h2 class="slide-title">Ce que GitHub Copilot n'est pas</h2>
+  <ul class="points">
+    <li>Ce n'est pas un <b>moteur de vérité</b> : il ne sait pas si votre règle métier est la bonne.</li>
+    <li>Ce n'est pas un <b>testeur</b> : générer un test n'est pas exécuter un test.</li>
+    <li>Ce n'est pas un <b>relecteur habilité</b> : la validation par un développeur référent reste obligatoire (guide, section 7).</li>
+    <li>Ce n'est pas un <b>coffre-fort</b> : ce que vous lui envoyez sort de votre poste.</li>
+    <li>Ce n'est pas un <b>décideur</b> : le guide Transactis l'interdit explicitement, section 3.</li>
+    <li>Ce n'est pas <b>Copilot Chat (Microsoft 365)</b> : celui-là sert au mail et aux documents Office, et ne voit pas votre code. Deux outils, deux périmètres.</li>
+  </ul>
+  <div class="note">Le piège le plus fréquent chez les débutants : confondre « ça compile » et « c'est correct ». Nous provoquerons volontairement cette erreur à l'<b>atelier 4</b>.</div>
+  <div class="src">Sources : Guide des bonnes pratiques Sécurité — Transactis, sections 3 et 7 · Source : GitHub Docs, « Best practices for using GitHub Copilot » — <a href="https://docs.github.com/en/copilot/get-started/best-practices" target="_blank" rel="noopener">docs.github.com/copilot/get-started/best-practices</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Fondamentaux</div>
+  <h2 class="slide-title">Les trois façons de s'en servir</h2>
+  <table class="cmp">
+    <tr><th>Mode</th><th>Ce que vous faites</th><th>Quand l'utiliser</th></tr>
+    <tr><td><b>Complétion</b> (dans le code)</td><td>Vous tapez, une suggestion grise apparaît, vous acceptez ou vous ignorez.</td><td>Code répétitif, structure évidente, ligne suivante prévisible.</td></tr>
+    <tr><td><b>Chat</b> (fenêtre de discussion)</td><td>Vous posez une question sur un fichier, une sélection, un message d'erreur.</td><td>Comprendre, analyser, expliquer, préparer une modification.</td></tr>
+    <tr><td><b>Édition guidée</b> (inline, dans le fichier)</td><td>Vous sélectionnez du code et vous décrivez la modification voulue.</td><td>Modifier un bloc précis en gardant la main sur le périmètre.</td></tr>
+  </table>
+  <div class="note">Aujourd'hui, nous travaillons surtout en <b>Chat</b> et en <b>édition guidée</b>. La complétion s'apprend en la pratiquant, pas en l'expliquant.</div>
+  <div class="src">Source : GitHub Docs, « Copilot features » — <a href="https://docs.github.com/en/copilot/get-started/features" target="_blank" rel="noopener">docs.github.com/copilot/get-started/features</a></div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">03</div>
+  <div class="section-tag">Module 3 — 09:40 à 10:05</div>
+  <h1 class="section-title">Environnement Transactis et sécurité</h1>
+  <p class="section-sub">Passer du texte du guide aux gestes concrets : ce que je peux envoyer, ce que je ne peux pas, et qui répond de quoi.</p>
+  <div class="schema-box" style="max-width:170px;margin-left:auto;margin-right:auto;">
+    <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="54" width="60" height="44" rx="6" fill="none" stroke="#0B2D48" stroke-width="4"/>
+      <path d="M44 54 V40 a16 16 0 0 1 32 0 V54" fill="none" stroke="#0E8C86" stroke-width="4"/>
+      <circle cx="60" cy="76" r="6" fill="#0E8C86"/>
+    </svg>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Sécurité</div>
+  <h2 class="slide-title">La règle de classification, en une phrase</h2>
+  <h3 class="subtitle">L'IA générative mise à disposition via Workplace ou GitHub ne peut recevoir que des données classifiées <b>C2 au maximum</b>.</h3>
+  <ul class="points">
+    <li>Si vous ne savez pas quel est le niveau de classification d'une donnée, <b>vous ne l'envoyez pas</b>.</li>
+    <li>Un doute sur la classification n'est pas un problème technique : c'est une question à poser au référent sécurité.</li>
+    <li>Le niveau se raisonne sur le <b>contenu réel</b>, pas sur le nom du fichier ni sur le répertoire où il se trouve.</li>
+  </ul>
+  <div class="note"><b>Contact</b> — accompagnement-securite@transactis.fr, pour toute demande d'accompagnement ou déclaration d'usage.</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, sections 5 et 9.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Sécurité</div>
+  <h2 class="slide-title">Ce qu'il ne faut jamais soumettre</h2>
+  <ul class="points">
+    <li>Des <b>informations sensibles</b> : données, documents, mails, codes sources relevant de ce niveau.</li>
+    <li>Des <b>données personnelles non anonymisées</b> : nom, adresse, identifiant client, coordonnées.</li>
+    <li>Des <b>informations contractuelles</b> : clauses, conditions négociées, annexes.</li>
+    <li>Des <b>informations financières</b>.</li>
+    <li>Des <b>secrets techniques</b> : clés, jetons, mots de passe, chaînes de connexion, schémas d'infrastructure.</li>
+  </ul>
+  <div class="note"><b>Le réflexe piège</b> — coller une trace d'erreur complète pour « aller plus vite ». Une trace contient souvent un chemin serveur, un identifiant de session, parfois une portion de requête avec des valeurs réelles. On extrait <b>le message d'erreur</b>, pas la trace.</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, section 5.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Sécurité</div>
+  <h2 class="slide-title">Anonymiser avant d'envoyer : le geste</h2>
+  <div class="two-col">
+    <div class="col">
+      <h4>À ne pas envoyer</h4>
+      <pre class="code">Erreur sur la demande de
+Nadia Berger (matricule 48211),
+service Comptabilite,
+lors de l'appel a
+srv-prod-02.interne/api/v2/demandes
+avec le jeton eyJhbGciOi...</pre>
+    </div>
+    <div class="col">
+      <h4>Équivalent acceptable</h4>
+      <pre class="code">J'ai une erreur au moment
+de valider un formulaire :
+« Cannot read properties
+of undefined (reading 'statut') ».
+Le code concerne est
+la fonction ligneDemande.</pre>
+    </div>
+  </div>
+  <div class="note">La seconde version est plus courte, plus précise, <b>moins coûteuse en tokens</b>, et donne une meilleure réponse. La sécurité et la qualité vont dans le même sens.</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, section 5.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Sécurité</div>
+  <h2 class="slide-title">Checklist : les six secondes avant d'envoyer</h2>
+  <ul class="points">
+    <li>Est-ce que ce que je colle contient <b>un nom, un identifiant, une valeur réelle</b> ?</li>
+    <li>Est-ce que ce fichier est classé <b>au-delà de C2</b>, ou est-ce que je n'en sais rien ?</li>
+    <li>Est-ce que j'envoie <b>plus que nécessaire</b> pour obtenir ma réponse ?</li>
+    <li>Est-ce que je saurai <b>vérifier</b> la réponse que je vais recevoir ?</li>
+    <li>Est-ce que je touche à un <b>module critique de sécurité</b> ?</li>
+  </ul>
+  <div class="note">Une seule réponse gênante suffit à ne pas envoyer. Reformulez, réduisez, ou posez la question à un collègue.<br><b>Deux rappels du guide</b> — l'IA est <b>interdite</b> pour les modules critiques de sécurité (chiffrement, contrôle d'accès), et le code généré doit <b>toujours</b> être validé par un développeur référent. L'outil, lui, n'a aucune responsabilité.</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, sections 5, 6 et 7.</div>
+</section>
+
+<section class="slide slide-question">
+  <div class="q-tag">&#128172; Question de relance</div>
+  <div class="q-question">Comment feriez-vous pour demander de l'aide sur un bug de production sans jamais transmettre de donnée réelle ?</div>
+  <div class="q-hint">Pistes à faire émerger : reproduire le cas avec des valeurs inventées, décrire la forme de la donnée plutôt que la donnée, isoler la fonction fautive dans un fichier de test, ne transmettre que le message d'erreur et la signature de la fonction.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">04</div>
+  <div class="section-tag">Module 4 — 10:05 à 10:20</div>
+  <h1 class="section-title">L'interface GitHub Copilot</h1>
+  <p class="section-sub">Savoir où sont les choses avant de savoir quoi leur demander. Quinze minutes, écran ouvert.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Interface</div>
+  <h2 class="slide-title">Copilot n'est pas une fenêtre, c'est plusieurs surfaces</h2>
+  <ul class="points">
+    <li><b>Dans l'éditeur</b> — les suggestions en ligne, qui apparaissent pendant que vous tapez.</li>
+    <li><b>La vue Chat</b> — un panneau latéral, pour poser des questions et obtenir des explications.</li>
+    <li><b>Le chat en ligne</b> — une zone de saisie qui s'ouvre directement dans le fichier, sur la sélection.</li>
+    <li><b>Le chat rapide</b> — une fenêtre volante, pour une question ponctuelle sans quitter le code.</li>
+    <li><b>Hors de l'éditeur</b> — github.com, le terminal, la revue de code. Nous les verrons en module 15, en référence.</li>
+  </ul>
+  <div class="note">Aujourd'hui, vous travaillerez presque uniquement dans la <b>vue Chat</b> et le <b>chat en ligne</b>, en mode <b>Question</b> et <b>Édition</b>. Le <b>mode Agent</b> — l'assistant qui enchaîne seul lecture, modification et exécution — <b>n'est pas disponible chez Transactis</b> : voir module 15.</div>
+  <div class="src">Source : VS Code Docs, « Use chat in VS Code » — <a href="https://code.visualstudio.com/docs/copilot/chat" target="_blank" rel="noopener">code.visualstudio.com/docs/copilot/chat</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Interface</div>
+  <h2 class="slide-title">Les cinq repères de la vue Chat</h2>
+  <table class="cmp">
+    <tr><th>Repère</th><th>Ce que c'est</th><th>Pourquoi il compte</th></tr>
+    <tr><td><b>1. Historique</b></td><td>La liste de vos conversations, et le bouton pour en ouvrir une nouvelle.</td><td>Une tâche, une conversation. C'est le premier geste de sobriété.</td></tr>
+    <tr><td><b>2. Fil</b></td><td>Vos demandes et les réponses, avec les blocs de code.</td><td>Les boutons Appliquer et Insérer sont à portée de clic. C'est là que l'on accepte sans lire.</td></tr>
+    <tr><td><b>3. Saisie</b></td><td>Votre demande, en français.</td><td>Les quatre blocs du module 7 s'écrivent ici.</td></tr>
+    <tr><td><b>4. Contexte</b></td><td>Les fichiers et sélections que Copilot prend en compte.</td><td>Une mauvaise réponse vient neuf fois sur dix d'un mauvais contexte.</td></tr>
+    <tr><td><b>5. Modèle</b></td><td>Le modèle qui répond, et le sélecteur pour en changer.</td><td>Le choix du modèle est un choix de coût et de vitesse, pas de justesse.</td></tr>
+  </table>
+  <div class="note">Les libellés exacts varient selon la version installée ; <b>les zones, non</b>. Repérez-les une fois, elles ne bougeront plus.</div>
+  <div class="src">Source : VS Code Docs, « Use chat in VS Code » — <a href="https://code.visualstudio.com/docs/copilot/chat" target="_blank" rel="noopener">code.visualstudio.com/docs/copilot/chat</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Interface</div>
+  <h2 class="slide-title">Le contexte implicite : ce que Copilot voit sans rien demander</h2>
+  <ul class="points">
+    <li>Le <b>fichier actif</b> dans l'éditeur, et son nom.</li>
+    <li>Votre <b>sélection</b> en cours, si vous en avez une.</li>
+    <li>Selon le mode, l'assistant décide lui-même d'aller chercher d'autres fichiers.</li>
+  </ul>
+  <div class="note"><b>Conséquence de sécurité directe</b> — si un fichier contenant des données réelles est ouvert dans l'onglet actif, il peut partir avec votre question. Fermez-le avant d'ouvrir le Chat. Ce réflexe vaut tous les rappels de règlement.</div>
+  <div class="src">Source : VS Code Docs, « Manage context for AI » — <a href="https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context" target="_blank" rel="noopener">code.visualstudio.com — Chat context</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Interface</div>
+  <h2 class="slide-title">Les suggestions en ligne, dans l'éditeur</h2>
+  <ul class="points">
+    <li>Elles apparaissent <b>en gris clair</b>, à la suite de ce que vous tapez, sans que vous les demandiez.</li>
+    <li><b>Tabulation</b> pour accepter, <b>Échap</b> pour refuser. Ne rien faire revient à refuser.</li>
+    <li>Il existe souvent plusieurs propositions : on passe de l'une à l'autre avec les raccourcis d'alternative.</li>
+    <li>On peut accepter <b>mot à mot</b> plutôt que d'un bloc : c'est plus lent, et beaucoup plus sûr pour débuter.</li>
+    <li>Un commentaire en français placé juste avant la ligne guide la suggestion.</li>
+  </ul>
+  <div class="note"><b>Le piège</b> — la suggestion s'accepte d'une seule touche, en pleine frappe, sans changer de fenêtre. C'est la surface où l'on accepte le plus souvent sans avoir lu.</div>
+  <div class="src">Source : GitHub Docs, « Best practices for using GitHub Copilot » — <a href="https://docs.github.com/en/copilot/get-started/best-practices" target="_blank" rel="noopener">docs.github.com/copilot/get-started/best-practices</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Interface</div>
+  <h2 class="slide-title">Raccourcis à connaître</h2>
+  <table class="cmp">
+    <tr><th>Action</th><th>Windows et Linux</th><th>macOS</th></tr>
+    <tr><td>Accepter la suggestion en ligne</td><td>Tab</td><td>Tab</td></tr>
+    <tr><td>Refuser la suggestion</td><td>Échap</td><td>Échap</td></tr>
+    <tr><td>Suggestion suivante / précédente</td><td>Alt + ] / Alt + [</td><td>Option + ] / Option + [</td></tr>
+    <tr><td>Déclencher une suggestion</td><td>Alt + \</td><td>Option + \</td></tr>
+    <tr><td>Ouvrir le chat en ligne, sur la sélection</td><td>Ctrl + I</td><td>Cmd + I</td></tr>
+    <tr><td>Ouvrir la vue Chat</td><td>Ctrl + Alt + I</td><td>Ctrl + Cmd + I</td></tr>
+    <tr><td>Demande précédente / suivante</td><td>Ctrl + Alt + Flèche haut / bas</td><td>Option + Cmd + Flèche haut / bas</td></tr>
+    <tr><td>Bloc de code précédent ou suivant</td><td>Ctrl + Alt + Page préc. / suiv.</td><td>Option + Cmd + Page préc. / suiv.</td></tr>
+  </table>
+  <div class="note">Les raccourcis d'ouverture varient selon la version et la configuration du poste. <b>Vérifiez-les au premier exercice</b> et notez les vôtres dans le cahier participant.</div>
+  <div class="src">Source : GitHub Docs, « Keyboard shortcuts for GitHub Copilot in the IDE » — <a href="https://docs.github.com/en/copilot/reference/keyboard-shortcuts" target="_blank" rel="noopener">docs.github.com/copilot/reference/keyboard-shortcuts</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Interface</div>
+  <h2 class="slide-title">Le chat en ligne, la surface la plus utile au quotidien</h2>
+  <ul class="points">
+    <li>Il s'ouvre <b>dans le fichier</b>, sur la sélection, sans changer de fenêtre.</li>
+    <li>Le contexte est implicite et <b>étroit</b> : exactement ce que vous avez sélectionné.</li>
+    <li>La réponse s'affiche sous forme de <b>différence</b> : ce qui est retiré, ce qui est ajouté.</li>
+    <li>Vous acceptez ou vous refusez, en voyant précisément ce qui change.</li>
+  </ul>
+  <div class="note"><b>Pourquoi c'est le meilleur choix pour débuter</b> — la différence affichée vous force à voir l'étendue de la modification. C'est le contraire d'un bloc de code copié sans périmètre visible.</div>
+  <div class="src">Source : VS Code Docs, « Use chat in VS Code » — <a href="https://code.visualstudio.com/docs/copilot/chat" target="_blank" rel="noopener">code.visualstudio.com/docs/copilot/chat</a></div>
+</section>
+
+<section class="slide slide-question">
+  <div class="q-tag">&#128172; Question de relance</div>
+  <div class="q-question">Sur les surfaces que nous venons de voir, laquelle présente le plus de risque d'envoyer une donnée que vous n'aviez pas l'intention d'envoyer ?</div>
+  <div class="q-hint">Le contexte implicite : le fichier actif part avec la question, sans que vous l'ayez désigné. D'où le réflexe — fermer ce qui n'a rien à faire là avant d'ouvrir le Chat.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Mise en jambes — 10:05 à 10:20</div>
+  <h2 class="exo-title">Premier contact</h2>
+  <div class="exo-duree">15 minutes — individuellement, sur votre poste · <span class="track track-web">web</span><span class="track track-java">java</span></div>
+  <ol class="exo-steps">
+    <li>Ouvrez <b>02_Codebase_TaskFlow/web</b> dans votre éditeur, et <b>index.html</b> dans un navigateur.</li>
+    <li>Ouvrez la vue Chat. Repérez les cinq zones et notez le <b>nom du modèle actif</b>.</li>
+    <li>Ouvrez <b>css/components.css</b>, placez le curseur en fin de fichier, commencez un commentaire de règle CSS et observez la suggestion en ligne.</li>
+    <li><b>N'acceptez rien.</b> Appuyez sur Échap. Vous venez de faire le geste le plus important de la journée.</li>
+    <li>Sélectionnez le bloc <b>.tf-badge</b> et ouvrez le chat en ligne dessus. Fermez-le sans rien demander : vous saurez le retrouver cet après-midi.</li>
+    <li><span class="track track-java">java</span> Si vous prenez la piste Java pour les exercices : compilez une fois le projet, puis faites les mêmes gestes sur <b>DateUtils.java</b>.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : vous savez ouvrir les trois surfaces, lire le nom du modèle, et refuser une suggestion.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">05</div>
+  <div class="section-tag">Module 5 — 10:20 à 10:35</div>
+  <h1 class="section-title">Cibler le contexte</h1>
+  <p class="section-sub">Variables, participants et commandes : les trois manières de dire à Copilot de quoi vous parlez.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Contexte</div>
+  <h2 class="slide-title">Trois familles, trois rôles</h2>
+  <table class="cmp">
+    <tr><th>Symbole</th><th>Famille</th><th>Ce que vous désignez</th></tr>
+    <tr><td><b>#</b></td><td>Variables de contexte</td><td><b>De quoi</b> vous parlez : un fichier, une sélection, une erreur, une sortie de terminal.</td></tr>
+    <tr><td><b>@</b></td><td>Participants</td><td><b>À qui</b> vous parlez : un spécialiste du projet, du terminal, de l'éditeur.</td></tr>
+    <tr><td><b>/</b></td><td>Commandes</td><td><b>Quoi faire</b> : expliquer, corriger, tester, documenter.</td></tr>
+  </table>
+  <div class="note">Une bonne demande combine souvent les trois. Mais <b>commencez par la variable</b> — c'est elle qui fait la différence de qualité.</div>
+  <div class="src">Source : VS Code Docs, « Manage context for AI » — <a href="https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context" target="_blank" rel="noopener">code.visualstudio.com — Chat context</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Variables</div>
+  <h2 class="slide-title">Les variables de contexte que vous désignez</h2>
+  <table class="cmp">
+    <tr><th>Variable</th><th>Ce qu'elle ajoute au contexte</th></tr>
+    <tr><td><b>#file</b></td><td>Un fichier précis du projet, que vous désignez par son nom.</td></tr>
+    <tr><td><b>#folder</b></td><td>Un dossier entier. Coûteux : à réserver à une vraie question d'ensemble.</td></tr>
+    <tr><td><b>#codebase</b></td><td>Lance une recherche dans tout le projet pour trouver les fichiers pertinents.</td></tr>
+    <tr><td><b>#selection</b></td><td>Le code actuellement sélectionné dans l'éditeur.</td></tr>
+    <tr><td><b>#problems</b></td><td>Les erreurs et avertissements remontés par l'éditeur.</td></tr>
+    <tr><td><b>#changes</b></td><td>Les modifications en cours, non encore validées.</td></tr>
+    <tr><td><b>#testFailure</b></td><td>Les informations sur le dernier test en échec.</td></tr>
+    <tr><td><b>#terminalSelection</b> · <b>#terminalLastCommand</b></td><td>Le texte sélectionné dans le terminal, ou la dernière commande et sa sortie.</td></tr>
+    <tr><td><b>#fetch</b> · <b>#githubRepo</b></td><td>Le contenu d'une page web, ou une recherche de code dans un dépôt GitHub donné.</td></tr>
+    <tr><td><b>#extensions</b> · <b>#VSCodeAPI</b></td><td>Questions sur l'éditeur lui-même et son interface de programmation.</td></tr>
+  </table>
+  <div class="note">Les variables liées au curseur — <b>#block</b>, <b>#line</b>, <b>#comment</b>, <b>#sym</b>, <b>#function</b>, <b>#class</b> — et la liste complète figurent dans la <b>Fiche des 100 commandes</b>, dossier <b>04_Guides_Reference</b>.</div>
+  <div class="src">Source : VS Code Docs, « Chat context » et GitHub Docs, « Chat cheat sheet » — <a href="https://docs.github.com/en/copilot/reference/chat-cheat-sheet" target="_blank" rel="noopener">docs.github.com/copilot/reference/chat-cheat-sheet</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Variables</div>
+  <h2 class="slide-title">Exemples prêts à coller — première série</h2>
+  <pre class="prompt">#file css/components.css
+Explique le rôle de cette feuille et liste les composants qu'elle definit.</pre>
+  <pre class="prompt">#selection
+Ce bloc de regles fait-il ce que son nom de classe annonce ? Reponds en trois
+phrases, sans proposer de correction.</pre>
+  <pre class="prompt">#codebase
+Ou la variable --tf-couleur-urgente est-elle definie, et sur quelles pages
+est-elle finalement visible ?</pre>
+  <div class="note"><b>Ordre de préférence</b> — #selection avant #file, #file avant #codebase. Le plus petit contexte qui permet de répondre est toujours le bon.</div>
+  <div class="src">Source : GitHub Docs, « Chat cheat sheet » — <a href="https://docs.github.com/en/copilot/reference/chat-cheat-sheet" target="_blank" rel="noopener">docs.github.com/copilot/reference/chat-cheat-sheet</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Commandes</div>
+  <h2 class="slide-title">Les commandes slash de votre éditeur</h2>
+  <table class="cmp">
+    <tr><th>Commande</th><th>Ce qu'elle fait</th><th>Atelier</th></tr>
+    <tr><td><b>/explain</b></td><td>Explique le code sélectionné ou le fichier ciblé.</td><td>Atelier 1</td></tr>
+    <tr><td><b>/fix</b></td><td>Analyse un problème sur le code sélectionné et propose une correction.</td><td>Ateliers 2 et 4</td></tr>
+    <tr><td><b>/tests</b></td><td>Génère des cas de test pour le code sélectionné.</td><td>Atelier 4</td></tr>
+    <tr><td><b>/fixTestFailure</b></td><td>Cible un test qui échoue et propose une correction.</td><td>Atelier 4</td></tr>
+    <tr><td><b>/doc</b></td><td>Produit un commentaire ou une documentation.</td><td>Atelier 5</td></tr>
+    <tr><td><b>/new</b></td><td>Crée une nouvelle structure de projet ou de fichier.</td><td>Hors ateliers</td></tr>
+    <tr><td><b>/clear</b></td><td>Vide la conversation en cours.</td><td>À chaque changement de tâche</td></tr>
+    <tr><td><b>/help</b></td><td>Affiche les commandes disponibles sur votre installation.</td><td>Quand la liste diffère</td></tr>
+  </table>
+  <div class="note">Tapez <b>/</b> dans la zone de saisie : la liste qui s'affiche est celle de votre poste.<br><b>Sur un projet HTML/CSS pur</b>, <b>/tests</b> et <b>/fixTestFailure</b> ne s'appliquent pas : c'est la <b>checklist d'accessibilité</b> qui joue le rôle de suite de tests. Sur la piste Java, ils s'appliquent pleinement.<br>Les <b>participants @</b> (@workspace, @terminal, @vscode, @github), les commandes des autres environnements et celles du terminal sont dans la <b>Fiche des 100 commandes</b>, dossier <b>04_Guides_Reference</b>.</div>
+  <div class="src">Source : GitHub Docs, « Chat cheat sheet » — <a href="https://docs.github.com/en/copilot/reference/chat-cheat-sheet" target="_blank" rel="noopener">docs.github.com/copilot/reference/chat-cheat-sheet</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Commandes</div>
+  <h2 class="slide-title">Commandes et variables, combinées</h2>
+  <pre class="prompt">/explain #selection
+Public : un developpeur qui decouvre le projet aujourd'hui.</pre>
+  <pre class="prompt">/fix #selection
+Ce bloc utilise des valeurs en dur. Remplace-les par les jetons de
+css/variables.css, sans changer le rendu visuel.</pre>
+  <pre class="prompt">/doc #selection
+Format : un commentaire d'en-tete indiquant le role de ce bloc, les pages qui
+l'utilisent, et ce qu'il ne faut pas y changer.</pre>
+  <div class="note">La <b>commande</b> donne le verbe, la <b>variable</b> donne la cible, la <b>phrase qui suit</b> donne les contraintes. Vous avez déjà trois des quatre blocs du module 7.</div>
+  <div class="src">Source : GitHub Docs, « Chat cheat sheet » — <a href="https://docs.github.com/en/copilot/reference/chat-cheat-sheet" target="_blank" rel="noopener">docs.github.com/copilot/reference/chat-cheat-sheet</a></div>
+</section>
+
+<section class="slide slide-question">
+  <div class="q-tag">&#128172; Question de relance</div>
+  <div class="q-question">Sur TaskFlow, quelle variable choisiriez-vous pour demander pourquoi le texte de l'encart hérité est si pâle ?</div>
+  <div class="q-hint">La bonne réponse est <b>#selection</b> sur le bloc concerné de <b>legacy-styles.css</b>, pas <b>#codebase</b>. On sait déjà où regarder : le contexte large ne servirait qu'à payer plus cher une réponse plus vague. Le réflexe à installer : chercher d'abord, cibler ensuite.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">06</div>
+  <div class="section-tag">Module 6 — 10:35 à 11:10</div>
+  <h1 class="section-title">Atelier 1 — Comprendre du code</h1>
+  <p class="section-sub">Le premier usage professionnel de Copilot n'est pas d'écrire du code : c'est de comprendre celui qu'on n'a pas écrit.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Terrain d'exercice</div>
+  <h2 class="slide-title">TaskFlow, le fil rouge de la journée</h2>
+  <ul class="points">
+    <li>Une petite application de <b>suivi des demandes internes</b> : dépôt, suivi, historique.</li>
+    <li><span class="track track-web">web</span> <b>HTML et CSS uniquement, aucune ligne de JavaScript</b> : aucun prérequis de programmation. Vous ouvrez <b>index.html</b> dans un navigateur, et c'est tout. C'est la piste utilisée pendant le cours.</li>
+    <li><span class="track track-java">java</span> La même application en Java, avec le JDK seul, pour ceux qui veulent travailler sur du code avec de la logique et une vraie suite de tests.</li>
+    <li><b>Dix-huit demandes de démonstration</b>, entièrement fictives, écrites pour la formation.</li>
+  </ul>
+  <div class="note">Le choix d'un projet minuscule est délibéré : vous devez pouvoir <b>vérifier vous-même</b> chaque réponse de Copilot en quelques secondes. Sur un projet réel, vous ne le pourriez pas — et c'est précisément là que les erreurs passent.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Terrain d'exercice</div>
+  <h2 class="slide-title">Les fichiers du projet, dans les deux pistes</h2>
+  <table class="cmp">
+    <tr><th>Rôle</th><th><span class="track track-web">web</span> HTML / CSS</th><th><span class="track track-java">java</span> Java</th></tr>
+    <tr><td>Page d'entrée</td><td>index.html — le tableau des 18 demandes</td><td>TaskFlowApp.java</td></tr>
+    <tr><td>Saisie</td><td>nouvelle-demande.html</td><td>FormulaireDemande.java</td></tr>
+    <tr><td>Fiche de détail</td><td>detail.html · detail-depassee.html</td><td>FicheDemande.java</td></tr>
+    <tr><td>Présentation du projet</td><td>about.html</td><td>README.md</td></tr>
+    <tr><td>Jetons de design / constantes</td><td>css/variables.css</td><td>Config.java</td></tr>
+    <tr><td>Mise en page et composants</td><td>css/base.css · layout.css · components.css · responsive.css</td><td>—</td></tr>
+    <tr><td>Code hérité, volontairement mal écrit</td><td>css/legacy-styles.css</td><td>RapportLegacy.java</td></tr>
+    <tr><td>Ce qui prouve qu'on n'a rien cassé</td><td>docs/checklist-accessibilite.md</td><td>TestRunner.java (16 tests)</td></tr>
+    <tr><td>Documentation de projet</td><td>docs/architecture.md</td><td>docs/architecture.md · docs/checklist-qualite.md</td></tr>
+  </table>
+  <div class="note">Le <b>cours</b> se fait sur la piste HTML/CSS, que tout le monde suit. Pour les <b>exercices</b>, chacun choisit sa piste le matin et la garde toute la journée : les consignes donnent systématiquement les deux variantes.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Méthode</div>
+  <h2 class="slide-title">Trois niveaux de question pour comprendre</h2>
+  <ul class="points">
+    <li><b>Niveau fichier</b> — « Explique le rôle de ce fichier dans le projet et ses dépendances. » Utile en arrivant sur un code inconnu.</li>
+    <li><b>Niveau fonction</b> — « Explique ce que fait cette fonction, ses paramètres et sa valeur de retour. » <b>Le niveau le plus rentable.</b></li>
+    <li><b>Niveau ligne</b> — « Explique cette ligne en particulier et pourquoi elle est écrite ainsi. » Pour lever un point de blocage précis.</li>
+  </ul>
+  <div class="note">Ne commencez <b>jamais</b> par le niveau projet. Vous obtiendrez une réponse vague, longue, coûteuse, et vous ne saurez pas la vérifier.</div>
+  <div class="src">Source : GitHub Docs, « Prompt engineering for Copilot Chat » — <a href="https://docs.github.com/en/copilot/concepts/prompting" target="_blank" rel="noopener">docs.github.com/copilot/concepts/prompting</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Méthode</div>
+  <h2 class="slide-title">Comment vérifier une explication</h2>
+  <ul class="points">
+    <li>L'explication cite-t-elle des <b>noms réellement présents</b> dans le code, ou des noms plausibles ?</li>
+    <li>Les <b>cas limites</b> annoncés existent-ils vraiment ? Une valeur nulle, une liste vide, une date manquante.</li>
+    <li>Le comportement décrit correspond-il à ce que vous <b>observez</b> à l'exécution ?</li>
+    <li>Si l'explication vous surprend, c'est intéressant : soit le code est mal écrit, soit l'explication est fausse. Les deux méritent une minute.</li>
+  </ul>
+  <div class="note"><b>Signal d'alerte</b> — une explication qui décrit une gestion d'erreur que vous ne trouvez pas dans le code. C'est le cas le plus courant d'invention.</div>
+  <div class="src">Source : GitHub Docs, « Best practices for using GitHub Copilot » — <a href="https://docs.github.com/en/copilot/get-started/best-practices" target="_blank" rel="noopener">docs.github.com/copilot/get-started/best-practices</a></div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Atelier 1 — 10:35 à 11:10</div>
+  <h2 class="exo-title">Comprendre du code — piste HTML/CSS</h2>
+  <div class="exo-duree">35 minutes — individuellement, puis mise en commun · <span class="track track-web">web</span></div>
+  <ol class="exo-steps">
+    <li>Ouvrez <b>css/components.css</b>. Demandez une explication du rôle de cette feuille et de sa place dans l'ordre de chargement.</li>
+    <li>Sélectionnez le bloc <b>.tf-badge</b> et ses variantes. Demandez à quoi il sert et sur quelles pages il apparaît.</li>
+    <li>Vérifiez dans le navigateur : ouvrez <b>index.html</b>, comptez les badges « urgente ». L'explication tient-elle ?</li>
+    <li>Ouvrez <b>css/legacy-styles.css</b> et faites expliquer le bloc <b>#encartAncien</b>. Lisez attentivement.</li>
+    <li>Notez tout écart entre l'explication reçue et ce que vous constatez à l'écran.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : trois phrases décrivant ce que fait réellement components.css, et une remarque sur ce que l'explication de l'encart hérité ne vous a pas dit.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Atelier 1 — 10:35 à 11:10</div>
+  <h2 class="exo-title">Comprendre du code — piste Java</h2>
+  <div class="exo-duree">35 minutes — individuellement, puis mise en commun · <span class="track track-java">java</span></div>
+  <ol class="exo-steps">
+    <li>Ouvrez <b>RechercheUtils.java</b>. Demandez une explication du rôle de la classe et de ses dépendances.</li>
+    <li>Sélectionnez la méthode <b>filtrerDemandes</b>. Demandez une explication de ses paramètres et de sa valeur de retour.</li>
+    <li>Vérifiez à l'exécution : lancez <b>./run.sh recherche=comptabilite</b> et comptez les lignes affichées.</li>
+    <li>Ouvrez <b>DateUtils.java</b> et faites expliquer la méthode <b>joursRestants</b>. Lisez attentivement.</li>
+    <li>Notez tout écart entre l'explication reçue et ce que vous constatez.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : trois phrases décrivant ce que fait réellement RechercheUtils, et une remarque sur joursRestants.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">07</div>
+  <div class="section-tag">Module 7 — 11:10 à 12:00</div>
+  <h1 class="section-title">Bien demander : prompt et contexte</h1>
+  <p class="section-sub">La différence entre une réponse inutilisable et une réponse exploitable tient presque toujours à la demande, pas au modèle.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Prompt</div>
+  <h2 class="slide-title">La structure en quatre blocs</h2>
+  <ul class="points">
+    <li><b>Contexte</b> — de quoi on parle : le fichier, la fonction, la situation.</li>
+    <li><b>Tâche</b> — ce que vous voulez obtenir, en un verbe d'action précis.</li>
+    <li><b>Contraintes</b> — ce qu'il ne faut pas faire, les conventions à respecter, les limites.</li>
+    <li><b>Résultat attendu</b> — la forme de la réponse : du code seul, une explication, une liste, un diff.</li>
+  </ul>
+  <div class="note">Les quatre blocs tiennent en <b>trois ou quatre phrases</b>. Ce n'est pas une question de longueur, c'est une question de précision.<br><b>Les deux contraintes que les débutants oublient</b> : dire <b>ce qu'il ne faut pas faire</b>, et demander <b>le format de la réponse</b> — code seul, liste, explication.</div>
+  <div class="src">Source : GitHub Docs, « Prompt engineering for Copilot Chat » — <a href="https://docs.github.com/en/copilot/concepts/prompting/prompt-engineering" target="_blank" rel="noopener">docs.github.com/copilot/concepts/prompting</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Prompt</div>
+  <h2 class="slide-title">Avant et après, sur un cas réel</h2>
+  <div class="two-col">
+    <div class="col">
+      <h4>Demande floue</h4>
+      <pre class="prompt">ameliore ce fichier</pre>
+      <p style="font-size:1rem;color:#4B5C63;margin-top:.8rem;">Résultat : une réécriture complète, un changement d'apparence, parfois du JavaScript ajouté « pour améliorer ». <b>Impossible à relire ligne à ligne.</b></p>
+      <div class="note" style="max-width:100%;">La demande de droite tient en douze lignes. C'est la différence entre les deux qui fait la qualité de la réponse, pas le modèle choisi.</div>
+    </div>
+    <div class="col">
+      <h4>Demande structurée</h4>
+      <pre class="prompt">Dans css/legacy-styles.css, le
+bloc #encartAncien affiche une
+note de service sur la fiche.
+
+Tache : remplacer les couleurs
+et espacements ecrits en dur par
+les jetons de css/variables.css.
+
+Contraintes : garder EXACTEMENT
+le meme rendu visuel, ne pas
+toucher aux autres blocs, aucun
+JavaScript.
+
+Resultat : le bloc modifie seul,
+et la liste de ce que je dois
+verifier dans le navigateur.</pre>
+    </div>
+  </div>
+  <div class="src">Source : GitHub Docs, « Prompt engineering for Copilot Chat » — <a href="https://docs.github.com/en/copilot/concepts/prompting" target="_blank" rel="noopener">docs.github.com/copilot/concepts/prompting</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Prompt</div>
+  <h2 class="slide-title">Écrire dans le code n'est pas écrire dans le Chat</h2>
+  <table class="cmp">
+    <tr><th></th><th>Dans le code (inline)</th><th>Dans le Chat</th></tr>
+    <tr><td><b>Forme</b></td><td>Un commentaire court, à l'impératif, juste avant le code attendu.</td><td>Des phrases complètes, structurées en quatre blocs.</td></tr>
+    <tr><td><b>Contexte</b></td><td>Implicite : ce qui précède dans le fichier.</td><td>Explicite : ce que vous désignez avec #.</td></tr>
+    <tr><td><b>Exemple</b></td><td><b>// retourne les demandes urgentes encore ouvertes</b></td><td>« Dans app.js, ajoute une fonction qui retourne les demandes urgentes encore ouvertes, sans modifier filtrerDemandes. »</td></tr>
+    <tr><td><b>La réponse</b></td><td>Une suggestion grise à accepter (Tab) ou refuser (Échap).</td><td>Une explication, un extrait, un dialogue possible.</td></tr>
+    <tr><td><b>Le risque</b></td><td>Accepter sans lire, parce que c'est rapide.</td><td>Obtenir une réponse hors sujet parce que le contexte est mal ciblé.</td></tr>
+  </table>
+  <div class="src">Source : GitHub Docs, « What is GitHub Copilot? » — <a href="https://docs.github.com/en/copilot/get-started/what-is-github-copilot" target="_blank" rel="noopener">docs.github.com/copilot/get-started</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Prompt</div>
+  <h2 class="slide-title">Une demande complète, sur la fiche de détail</h2>
+  <pre class="prompt">Contexte : dans detail.html, la liste de definitions tf-fiche-liste
+affiche l'echeance d'une demande. La mention « echeance proche » repose
+aujourd'hui sur la seule classe tf-echeance--proche, donc sur la couleur.
+
+Tache : ajouter, a cote de la date, une mention en toutes lettres
+— « echeance proche » ou « echeance depassee » — pour que l'information
+ne repose plus uniquement sur la couleur.
+
+Contraintes : HTML et CSS uniquement, aucun JavaScript ; reutiliser les
+classes existantes de css/components.css sans en creer de nouvelle ;
+aucune couleur hors css/variables.css ; ne pas toucher au tableau de
+index.html.
+
+Resultat attendu : uniquement le bloc modifie, avec un commentaire
+expliquant le choix, et la liste des points de docs/checklist-accessibilite.md
+que je dois verifier moi-meme.</pre>
+  <div class="note">Remarquez la dernière ligne : <b>demander la liste des cas limites</b> est le meilleur moyen de transformer l'assistant en aide à la vérification plutôt qu'en générateur aveugle.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Exercice guidé — 11:40 à 12:00</div>
+  <h2 class="exo-title">Transformer une demande floue</h2>
+  <div class="exo-duree">20 minutes — en binôme · <span class="track track-web">web</span><span class="track track-java">java</span></div>
+  <ol class="exo-steps">
+    <li>Partez de la demande floue : « nettoie ce fichier, il est mal écrit ».</li>
+    <li>Réécrivez-la en quatre blocs : contexte, tâche, contraintes, résultat attendu.</li>
+    <li>Soumettez les deux versions à Copilot, l'une après l'autre, sur <b>css/legacy-styles.css</b> <span class="track track-web">web</span> ou <b>RechercheUtils.java</b> <span class="track track-java">java</span>.</li>
+    <li>Comparez les deux réponses : périmètre touché, longueur, facilité de relecture.</li>
+    <li>Notez la contrainte qui a eu le plus d'effet sur la qualité de la réponse.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : la version structurée de la demande, et une phrase sur la différence observée.</div>
+  <div class="src">Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">08</div>
+  <div class="section-tag">Module 8 — 13:00 à 13:25</div>
+  <h1 class="section-title">Crédits, modèles et sobriété</h1>
+  <p class="section-sub">Comprendre ce qui consomme, pour arrêter de payer — en temps et en ressources — ce dont vous n'avez pas besoin.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Le modèle de facturation</div>
+  <h2 class="slide-title">Ce qui est gratuit, ce qui est facturé</h2>
+  <div class="two-col">
+    <div class="col">
+      <h4>Gratuit, illimité</h4>
+      <ul class="points"><li>Complétions de code et suggestions « next edit » pendant que vous tapez.</li></ul>
+    </div>
+    <div class="col">
+      <h4>Consomme des AI Credits</h4>
+      <ul class="points"><li>Chat, mode agent, agent distant, Copilot CLI, Copilot Spaces.</li></ul>
+    </div>
+  </div>
+  <ul class="points" style="margin-top:1.2rem;">
+    <li><b>1 AI Credit = 0,01 $.</b> Un budget de 1 500 credits équivaut à 15 $ de consommation possible.</li>
+    <li>Le coût dépend de <b>deux facteurs</b> : le modèle choisi, et le nombre de tokens échangés — <b>en entrée comme en sortie</b>.</li>
+    <li>Le contexte est <b>renvoyé à chaque tour</b>. Une conversation de trente messages coûte, à chaque nouveau message, le prix de tout ce qui précède.</li>
+    <li>Les <b>tokens de sortie</b> coûtent nettement plus cher que ceux d'entrée : « code seulement, sans explication » réduit sensiblement la facture d'une tâche répétitive.</li>
+  </ul>
+  <div class="note">Plans, budgets d'organisation, taux par modèle et coût des revues automatiques : <b>Fiche des 100 commandes</b>, section « Coûts », dossier <b>04_Guides_Reference</b>.</div>
+  <div class="src">Source : GitHub Docs, « Usage-based billing for individuals » — <a href="https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-individuals" target="_blank" rel="noopener">docs.github.com/copilot/concepts/billing</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Sobriété</div>
+  <h2 class="slide-title">Quel modèle pour quelle tâche</h2>
+  <table class="cmp">
+    <tr><th>Type de tâche</th><th>Modèle adapté</th><th>Pourquoi</th></tr>
+    <tr><td>Complétion de code répétitif</td><td>Le plus rapide disponible</td><td>La structure est évidente, la réflexion est inutile.</td></tr>
+    <tr><td>Expliquer une fonction</td><td>Modèle standard</td><td>Tâche de lecture, pas de raisonnement complexe.</td></tr>
+    <tr><td>Générer des tests</td><td>Modèle standard</td><td>La difficulté est de trouver les cas, pas de les écrire.</td></tr>
+    <tr><td>Analyser un bug non évident</td><td>Modèle de raisonnement</td><td>Il faut suivre une chaîne de causes.</td></tr>
+    <tr><td>Refonte d'architecture</td><td>Modèle de raisonnement</td><td>Rare en débutant, et jamais sans validation du référent.</td></tr>
+  </table>
+  <div class="note"><b>Commencez toujours par le modèle le plus léger.</b> Passez au plus lourd seulement si la réponse ne vous satisfait pas — et dites-le explicitement dans votre relance.</div>
+  <div class="src">Source : GitHub Docs, « Supported AI models in Copilot » — <a href="https://docs.github.com/en/copilot/reference/ai-models/supported-models" target="_blank" rel="noopener">docs.github.com/copilot/reference/ai-models/supported-models</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Sobriété</div>
+  <h2 class="slide-title">Cinq gaspillages fréquents</h2>
+  <ul class="points">
+    <li>Envoyer <b>le projet entier</b> pour une question qui porte sur douze lignes.</li>
+    <li>Poursuivre une conversation de trente messages au lieu d'en ouvrir une nouvelle sur le nouveau sujet.</li>
+    <li>Redemander la même chose en reformulant, au lieu de <b>relancer sur le point précis</b> qui coince.</li>
+    <li>Demander une réécriture complète quand <b>trois lignes</b> sont en cause.</li>
+    <li>Utiliser le modèle le plus lourd par défaut, par confort.</li>
+  </ul>
+  <div class="note"><b>Un réflexe simple</b> — nouvelle tâche, nouvelle conversation. Le contexte accumulé d'une tâche précédente pollue la réponse autant qu'il alourdit la facture.<br><b>Les quatre gestes qui paient</b> : ouvrir les fichiers pertinents et fermer les autres ; nettoyer l'historique ; donner un exemple d'entrée et de sortie plutôt qu'un paragraphe ; rester sur le même modèle dans une conversation, car en changer casse la mise en cache du contexte.</div>
+  <div class="src">Source : GitHub Docs, « Best practices for using GitHub Copilot » — <a href="https://docs.github.com/en/copilot/get-started/best-practices" target="_blank" rel="noopener">docs.github.com/copilot/get-started/best-practices</a></div>
+</section>
+
+<section class="slide slide-question">
+  <div class="q-tag">&#128172; Question de relance</div>
+  <div class="q-question">Sur les cinq gaspillages, lequel vous reconnaissez-vous le plus probablement le plus souvent ?</div>
+  <div class="q-hint">Le plus répandu chez les débutants est la conversation qui n'en finit pas : on garde le fil ouvert toute la journée parce que l'assistant « sait déjà de quoi on parle ». Il sait surtout de quoi on parlait ce matin, ce qui n'est plus le sujet.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">09</div>
+  <div class="section-tag">Module 9 — 13:25 à 14:10</div>
+  <h1 class="section-title">Atelier 2 — Analyser et améliorer</h1>
+  <p class="section-sub">Reprendre du code existant sans le casser : le cas de figure le plus fréquent, et le plus délicat.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Atelier 2</div>
+  <h2 class="slide-title">Deux cibles, deux natures de problème</h2>
+  <table class="cmp">
+    <tr><th>Cible</th><th><span class="track track-web">web</span></th><th><span class="track track-java">java</span></th></tr>
+    <tr><td><b>Problème de qualité</b><br>Rien ne casse, mais la maintenance coûte cher.</td><td>css/legacy-styles.css — sélecteurs par identifiant, valeurs codées en dur, classes redondantes, imbrication sur quatre niveaux.</td><td>RapportLegacy.java — méthode trop longue, concaténation en boucle, valeurs magiques, noms opaques.</td></tr>
+    <tr><td><b>Problème d'usage</b><br>L'utilisateur ne comprend pas ce qu'il voit.</td><td>Le texte de l'encart hérité est écrit en <b>#8fa2a8 sur fond clair</b> : le contraste est insuffisant, donc le texte est difficile à lire.</td><td>RechercheUtils.java, méthode <b>normaliser</b> — les accents ne sont pas retirés : « echeance » ne trouve pas « échéance ».</td></tr>
+  </table>
+  <div class="note">Sur le premier, Copilot est très bon et vous pouvez lui faire confiance <b>après relecture</b>. Sur le second, il faut lui dire <b>quel résultat vous voulez</b> — un contraste d'au moins 4,5:1, une recherche qui ignore les accents — sans quoi il « améliore » sans corriger.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Atelier 2</div>
+  <h2 class="slide-title">La méthode en cinq gestes</h2>
+  <ul class="points">
+    <li><b>Sélectionner</b> exactement le bloc concerné, pas le fichier entier.</li>
+    <li><b>Faire expliquer avant de faire modifier.</b> Si l'explication est fausse, la correction le sera aussi.</li>
+    <li><b>Demander l'analyse</b> des problèmes, sous forme de liste, avant tout code.</li>
+    <li><b>Choisir</b> les points à traiter. Vous n'êtes pas obligé de tout accepter.</li>
+    <li><b>Demander la modification point par point</b>, en nommant la contrainte à respecter.</li>
+  </ul>
+  <div class="note">Ne sautez jamais l'étape 3. Demander « corrige » sans avoir vu la liste des problèmes, c'est <b>accepter un périmètre que vous ne connaissez pas</b>.</div>
+  <div class="src">Source : GitHub Docs, « Prompt engineering for Copilot Chat » — <a href="https://docs.github.com/en/copilot/concepts/prompting" target="_blank" rel="noopener">docs.github.com/copilot/concepts/prompting</a></div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Atelier 2 — 13:25 à 14:10</div>
+  <h2 class="exo-title">Analyser et améliorer — piste HTML/CSS</h2>
+  <div class="exo-duree">45 minutes — individuellement, restitution en groupe · <span class="track track-web">web</span></div>
+  <ol class="exo-steps">
+    <li>Ouvrez <b>css/legacy-styles.css</b> et demandez la liste des problèmes de qualité, <b>sans modification</b>.</li>
+    <li>Choisissez trois problèmes. Demandez la réécriture du bloc <b>#encartAncien</b> en respectant les conventions de <b>docs/architecture.md</b> : jetons de <b>variables.css</b>, classes préfixées <b>tf-</b>, ni identifiant ni <b>!important</b>.</li>
+    <li>Faites une <b>capture d'écran de detail.html avant</b> la modification. Comparez après : le rendu doit être identique.</li>
+    <li>Traitez ensuite le problème d'usage : demandez une couleur de texte qui atteigne un contraste d'au moins <b>4,5:1</b> sur le fond de l'encart, prise dans <b>variables.css</b>.</li>
+    <li>Vérifiez vous-même le résultat à l'écran, et relisez le point « Couleurs et lisibilité » de la checklist.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : la liste des problèmes identifiés, les trois retenus, et la preuve visuelle — avant / après — que le rendu n'a pas régressé.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Atelier 2 — 13:25 à 14:10</div>
+  <h2 class="exo-title">Analyser et améliorer — piste Java</h2>
+  <div class="exo-duree">45 minutes — individuellement, restitution en groupe · <span class="track track-java">java</span></div>
+  <ol class="exo-steps">
+    <li>Ouvrez <b>RapportLegacy.java</b> et demandez la liste des problèmes de qualité, <b>sans modification</b>.</li>
+    <li>Choisissez trois problèmes. Demandez la réécriture de la méthode <b>construireRapport</b> en respectant les conventions de <b>docs/architecture.md</b>.</li>
+    <li>Relancez <b>./run.sh rapport</b> : la sortie texte doit être identique, caractère pour caractère.</li>
+    <li>Ouvrez <b>RechercheUtils.java</b>, sélectionnez <b>normaliser</b>, et faites corriger la gestion des accents.</li>
+    <li>Relancez <b>./run.sh tests</b> : aucun test existant ne doit régresser.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : la liste des problèmes identifiés, les trois retenus, et la preuve que la sortie du rapport n'a pas changé.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">10</div>
+  <div class="section-tag">Module 10 — 14:10 à 14:55</div>
+  <h1 class="section-title">Atelier 3 — Générer et modifier</h1>
+  <p class="section-sub">Transformer un besoin exprimé en français en une modification maîtrisée, dont vous pouvez rendre compte.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Atelier 3</div>
+  <h2 class="slide-title">Du besoin au code, en quatre temps</h2>
+  <ul class="points">
+    <li><b>Reformuler</b> le besoin en une phrase vérifiable. « Pouvoir isoler les demandes d'un service » devient « un filtre par service qui met à jour le tableau ».</li>
+    <li><b>Localiser</b> le ou les fichiers concernés. Vous pouvez demander à Copilot de vous aider à les identifier.</li>
+    <li><b>Décrire la modification avec ses contraintes</b>, sans décrire l'implémentation. Vous dites <b>quoi</b>, il propose <b>comment</b>.</li>
+    <li><b>Relire et ajuster</b>, ligne à ligne, avant d'exécuter.</li>
+  </ul>
+  <div class="note">Le piège classique est d'inverser : décrire l'implémentation qu'on imagine plutôt que le comportement voulu. On obtient alors du code qui fait exactement ce qu'on a dit, <b>et pas ce qu'on voulait</b>.</div>
+  <div class="src">Source : GitHub Docs, « Prompt engineering for Copilot Chat » — <a href="https://docs.github.com/en/copilot/concepts/prompting" target="_blank" rel="noopener">docs.github.com/copilot/concepts/prompting</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Atelier 3</div>
+  <h2 class="slide-title">Ce qu'il faut relire en priorité</h2>
+  <ul class="points">
+    <li><b>Le périmètre</b> — des fonctions ont-elles été touchées alors qu'elles n'étaient pas concernées ?</li>
+    <li><b>Les conventions</b> — les classes sont-elles préfixées <b>tf-</b> ? Les couleurs passent-elles par <b>variables.css</b> ? Les noms sont-ils en français ?</li>
+    <li><b>Ce qui n'a pas été demandé</b> — du JavaScript a-t-il été ajouté « pour simplifier » ? Une bibliothèque a-t-elle été introduite ?</li>
+    <li><b>L'accessibilité</b> — une action est-elle restée un <b>button</b> ? Un champ a-t-il toujours son <b>label</b> ? Le tableau a-t-il gardé sa <b>caption</b> ?</li>
+    <li><b>Les cas limites</b> — texte très long, valeur absente, écran étroit.</li>
+  </ul>
+  <div class="src">Référence projet : <b>docs/checklist-accessibilite.md</b> <span class="track track-web">web</span> ou <b>docs/checklist-qualite.md</b> <span class="track track-java">java</span>, dans la codebase TaskFlow.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Atelier 3 — 14:10 à 14:55</div>
+  <h2 class="exo-title">Générer une modification contrôlée</h2>
+  <div class="exo-duree">45 minutes — individuellement · <span class="track track-web">web</span><span class="track track-java">java</span></div>
+  <ol class="exo-steps">
+    <li>Besoin exprimé : « Sur la fiche d'une demande, je veux voir tout de suite si l'échéance est proche. »</li>
+    <li>Reformulez ce besoin en une phrase vérifiable, puis identifiez le fichier concerné.</li>
+    <li>Rédigez une demande en quatre blocs et obtenez une proposition de modification.</li>
+    <li>Relisez la proposition avec la grille de la slide précédente. <b>Notez ce que vous refusez.</b></li>
+    <li><span class="track track-web">web</span> Appliquez, rechargez <b>detail.html</b> (échéance proche), vérifiez le rendu, puis <b>detail-depassee.html</b> (échéance dépassée). Les deux cas doivent rester lisibles.</li>
+    <li><span class="track track-java">java</span> Appliquez, relancez <b>./run.sh fiche DEM-2026-0112</b>, puis <b>./run.sh fiche DEM-2026-0107</b>.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : la modification appliquée, et la liste de ce que vous avez refusé dans la proposition initiale.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-question">
+  <div class="q-tag">&#128172; Question de relance</div>
+  <div class="q-question">Qu'avez-vous refusé dans la proposition, et pour quelle raison ?</div>
+  <div class="q-hint">Les refus les plus fréquents : une couleur écrite en dur au lieu d'un jeton de <b>variables.css</b>, une classe inventée alors qu'une classe existante convenait, <b>du JavaScript ajouté sans qu'on l'ait demandé</b>, un renommage qui casse la cohérence du fichier, un bloc réécrit au-delà du périmètre.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">11</div>
+  <div class="section-tag">Module 11 — 15:10 à 15:50</div>
+  <h1 class="section-title">Atelier 4 — Tests et debugging</h1>
+  <p class="section-sub">Le moment de la journée où l'outil vous montrera qu'il peut se tromper avec assurance.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Atelier 4</div>
+  <h2 class="slide-title">Vérifier n'est pas croire</h2>
+  <ul class="points">
+    <li>Copilot <b>affirme</b> très bien. Il ne sait pas si ce qu'il affirme est vrai sur votre projet.</li>
+    <li>Pire : il décrit parfois le comportement actuel du code comme s'il était le comportement voulu, <b>défaut compris</b>.</li>
+    <li>Ce qui fait foi, c'est <b>ce que vous constatez</b> : le test qui passe au vert, ou le point de checklist que vous avez vérifié à l'écran.</li>
+    <li><span class="track track-web">web</span> Sur un projet HTML/CSS pur, il n'y a pas de test automatisé : c'est <b>docs/checklist-accessibilite.md</b> qui prouve qu'une modification n'a rien cassé.</li>
+    <li><span class="track track-java">java</span> Sur la piste Java, <b>./run.sh tests</b> exécute seize tests avec le JDK seul.</li>
+  </ul>
+  <div class="note"><b>Ordre correct</b> — j'écris le résultat attendu, puis je vérifie, puis je regarde l'écart, puis je corrige. Jamais l'inverse.</div>
+  <div class="src">Sources : Guide des bonnes pratiques Sécurité — Transactis, section 6 · Source : GitHub Docs, « Best practices for using GitHub Copilot » — <a href="https://docs.github.com/en/copilot/get-started/best-practices" target="_blank" rel="noopener">docs.github.com/copilot/get-started/best-practices</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Atelier 4</div>
+  <h2 class="slide-title">L'état du projet au démarrage</h2>
+  <div class="two-col">
+    <div class="col">
+      <h4><span class="track track-web">web</span> Cinq écarts d'accessibilité</h4>
+      <p style="font-size:1.02rem;color:#4B5C63;">Cinq écarts subsistent dans <b>index.html</b> et <b>nouvelle-demande.html</b>. Ils sont <b>invisibles à l'œil</b> : la page a l'air normale. Seule la checklist, passée point par point, les fait apparaître.</p>
+      <pre class="code">docs/checklist-accessibilite.md
+  Structure ......... ?
+  Formulaires ....... ?
+  Interactions ...... ?
+  Tableaux .......... ?
+  Couleurs .......... ?</pre>
+    </div>
+    <div class="col">
+      <h4><span class="track track-java">java</span> Deux tests en échec</h4>
+      <pre class="code">14 / 16 tests reussis, 2 en echec.
+
+FAIL  joursRestants - mois suivant
+      attendu = 31   obtenu = 1
+FAIL  joursRestants - changement d'annee
+      attendu = 6    obtenu = -25</pre>
+      <p style="font-size:1.02rem;color:#4B5C63;">La méthode ne compare que <b>le jour du mois</b>. Elle est juste tant que les deux dates sont dans le même mois — d'où un défaut qui passe inaperçu.</p>
+    </div>
+  </div>
+  <div class="note">Dans les deux cas, c'est le même profil de défaut : le code est <b>court, lisible, et faux</b>. La relecture seule ne le détecte pas.<br><b>La méthode</b> : donner le constat exact et rien d'autre · demander <b>la cause avant la correction</b> · vérifier la cause soi-même dans le code · revérifier après coup. Le point de checklist repassé, ou le test au vert, est la seule preuve.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Atelier 4 — 15:10 à 15:50</div>
+  <h2 class="exo-title">Retrouver les cinq écarts — piste HTML/CSS</h2>
+  <div class="exo-duree">40 minutes — individuellement · <span class="track track-web">web</span></div>
+  <ol class="exo-steps">
+    <li>Ouvrez <b>docs/checklist-accessibilite.md</b> et <b>index.html</b>. Demandez à Copilot de passer la page au crible de la checklist, <b>point par point, sans proposer aucune correction</b>.</li>
+    <li>Faites de même sur <b>nouvelle-demande.html</b>.</li>
+    <li><b>Vérifiez chaque écart annoncé dans le code, vous-même.</b> Certains seront inventés, un vrai sera peut-être oublié.</li>
+    <li>Il y a exactement <b>cinq</b> écarts réels. Listez-les avant de demander quoi que ce soit.</li>
+    <li>Demandez la correction, écart par écart, en imposant : HTML et CSS uniquement, aucun JavaScript, aucune couleur hors <b>variables.css</b>, rendu visuel inchangé.</li>
+    <li>Repassez la checklist entière après correction, et vérifiez au clavier : <b>Tab</b> doit atteindre chaque élément interactif, dans l'ordre.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : les cinq écarts corrigés, la liste de ceux que Copilot avait inventés, et une phrase sur celui qu'il avait manqué.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Atelier 4 — 15:10 à 15:50</div>
+  <h2 class="exo-title">Tests et debugging — piste Java</h2>
+  <div class="exo-duree">40 minutes — individuellement · <span class="track track-java">java</span></div>
+  <ol class="exo-steps">
+    <li>Lancez <b>./run.sh tests</b>. Constatez les deux échecs.</li>
+    <li>Ouvrez <b>DateUtils.java</b>, sélectionnez <b>joursRestants</b>, et demandez la cause de l'écart, <b>sans demander de correction</b>.</li>
+    <li><b>Vérifiez la cause annoncée en lisant le code.</b> Est-elle exacte ?</li>
+    <li>Demandez maintenant la correction, en imposant : sans bibliothèque, avec <b>java.time</b>, en conservant la signature et le commentaire.</li>
+    <li>Relancez <b>./run.sh tests</b>. <b>Les seize tests doivent passer.</b></li>
+    <li>Demandez trois cas de test supplémentaires — année bissextile, échéance identique à la date de référence, écart de plusieurs mois — ajoutez-les à <b>TestRunner</b> et relancez.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : seize tests au vert, plus trois cas ajoutés par vos soins, et une phrase sur la cause réelle du bug.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">12</div>
+  <div class="section-tag">Module 12 — 15:50 à 16:25</div>
+  <h1 class="section-title">Atelier 5 — Documentation</h1>
+  <p class="section-sub">Écrire pour le collègue qui reprendra ce fichier dans six mois — et qui sera peut-être vous.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Atelier 5</div>
+  <h2 class="slide-title">Trois niveaux de documentation</h2>
+  <table class="cmp">
+    <tr><th>Niveau</th><th>Contenu</th><th>Où</th></tr>
+    <tr><td><b>Fonction</b></td><td>Rôle, paramètres, valeur de retour, cas limites.</td><td>Commentaire au-dessus de la fonction.</td></tr>
+    <tr><td><b>Fichier</b></td><td>Rôle du fichier, dépendances, ordre de chargement.</td><td>En-tête du fichier.</td></tr>
+    <tr><td><b>Projet</b></td><td>Architecture, conventions, choix assumés.</td><td>docs/architecture.md.</td></tr>
+  </table>
+  <div class="note">Ce que Copilot fait bien : la forme, la structure, l'exhaustivité des paramètres. Ce qu'il ne peut pas faire : expliquer <b>pourquoi</b> un choix a été fait. Le « pourquoi » vient de vous, toujours.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Atelier 5</div>
+  <h2 class="slide-title">Le test du collègue</h2>
+  <h3 class="subtitle">Une documentation est bonne si un développeur qui n'a jamais vu le fichier peut, en la lisant seule, prévoir ce que fait la fonction <b>sans lire son corps</b>.</h3>
+  <div class="two-col">
+    <div class="col">
+      <h4>Inutile</h4>
+      <pre class="code">/* badge */
+.tf-badge {</pre>
+    </div>
+    <div class="col">
+      <h4>Utile</h4>
+      <pre class="code">/* Pastille de priorite, utilisee dans le
+   tableau (index.html) et la fiche
+   (detail.html). La couleur vient de la
+   variante tf-badge--<priorite> ; le
+   libelle reste toujours en texte, pour
+   que l'info ne repose pas sur la couleur
+   seule. */
+.tf-badge {</pre>
+    </div>
+  </div>
+  <ul class="points" style="margin-top:1rem;">
+    <li>Un commentaire qui <b>répète le nom</b> de la fonction n'apporte rien.</li>
+    <li>Un commentaire qui décrit <b>ligne à ligne</b> ce que le code fait n'apporte rien non plus.</li>
+    <li>Un commentaire utile donne : l'<b>intention</b>, <b>où c'est utilisé</b>, et <b>ce qu'il ne faut pas y changer</b>.</li>
+  </ul>
+  <div class="src">Référence projet : <b>docs/architecture.md</b> de la piste choisie, dans la codebase TaskFlow.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Atelier 5 — 15:50 à 16:25</div>
+  <h2 class="exo-title">Documenter pour un autre développeur</h2>
+  <div class="exo-duree">35 minutes — en binôme, avec échange de copies · <span class="track track-web">web</span><span class="track track-java">java</span></div>
+  <ol class="exo-steps">
+    <li>Chacun choisit un fichier différent : <span class="track track-web">web</span> <b>css/components.css</b> ou <b>css/layout.css</b> — <span class="track track-java">java</span> <b>FormulaireDemande.java</b> ou <b>FicheDemande.java</b>.</li>
+    <li>Faites générer un en-tête de fichier et les commentaires des blocs ou des méthodes principales.</li>
+    <li>Corrigez ce qui est faux ou creux. <b>Ajoutez le « pourquoi »</b> que l'assistant ne peut pas connaître.</li>
+    <li>Échangez avec votre binôme. Lisez la documentation de l'autre <b>sans lire son code</b>.</li>
+    <li>Notez chaque fois que vous avez dû ouvrir le code pour comprendre. Chacune de ces fois est un manque à combler.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : un fichier documenté, et la liste des points relevés par votre binôme.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">13</div>
+  <div class="section-tag">Module 13 — 16:25 à 17:00</div>
+  <h1 class="section-title">Challenge débutant</h1>
+  <p class="section-sub">Un mini-workflow complet, du besoin métier au code documenté et testé.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Challenge</div>
+  <h2 class="slide-title">Le cas</h2>
+  <h3 class="subtitle">« TaskFlow doit permettre de retrouver plus facilement les demandes urgentes. »</h3>
+  <ul class="points">
+    <li>C'est un <b>besoin exprimé par un utilisateur</b>, pas une spécification technique.</li>
+    <li>Aujourd'hui, l'application affiche un compteur de demandes urgentes ouvertes, mais rien ne permet de les <b>isoler</b> dans le tableau.</li>
+    <li>À vous de décider ce que « plus facilement » veut dire, et de <b>l'assumer</b>.</li>
+    <li>Individuellement ou en binôme. Trente-cinq minutes.</li>
+  </ul>
+  <div class="note">Il n'y a pas une seule bonne réponse. Il y a des <b>réponses défendables</b> — celles dont vous pouvez expliquer chaque ligne.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Challenge</div>
+  <h2 class="slide-title">Le workflow complet, en dix étapes</h2>
+  <ul class="points">
+    <li>Comprendre la codebase concernée · Identifier le fichier pertinent · Reformuler le besoin en une phrase vérifiable.</li>
+    <li>Formuler le prompt en quatre blocs · Obtenir une proposition · <b>Analyser la proposition, ligne à ligne</b>.</li>
+    <li>Modifier le code · Générer un test · <b>Exécuter le test</b>.</li>
+    <li><b>Documenter</b>, puis expliquer ce que vous avez accepté et ce que vous avez refusé.</li>
+  </ul>
+  <div class="note">Les étapes <b>6, 9 et 10</b> ne sont jamais déléguées. Ce sont celles qui font de vous le responsable de ce code, au sens de la section 8 du guide.</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, section 8 — responsabilités.</div>
+</section>
+
+<section class="slide slide-exercice">
+  <div class="exo-tag">Challenge — 16:25 à 17:00</div>
+  <h2 class="exo-title">Retrouver les demandes urgentes</h2>
+  <div class="exo-duree">35 minutes — seul ou en binôme · <span class="track track-web">web</span><span class="track track-java">java</span></div>
+  <ol class="exo-steps">
+    <li>Déroulez les dix étapes du workflow, dans l'ordre, sans en sauter une.</li>
+    <li><span class="track track-web">web</span> Une piste parmi d'autres : une page <b>urgentes.html</b> qui ne liste que les demandes urgentes ouvertes, avec un lien depuis le tableau. Contraintes : HTML et CSS uniquement, <b>aucun JavaScript</b>, aucune couleur hors <b>variables.css</b>, classes existantes réutilisées, accessibilité du tableau préservée.</li>
+    <li><span class="track track-java">java</span> Une piste parmi d'autres : une option <b>urgentes</b> pour <b>TaskFlowApp</b>. Contraintes : aucune valeur magique, signature des méthodes existantes conservée, sortie lisible en console.</li>
+    <li>Prouvez que vous n'avez rien cassé : <span class="track track-web">web</span> la checklist d'accessibilité repassée sur la page ajoutée et sur index.html — <span class="track track-java">java</span> au moins un test ajouté, et <b>./run.sh tests</b> au vert.</li>
+    <li>Préparez trois phrases : ce que vous avez fait, ce que vous avez refusé, ce que vous vérifieriez encore avec une heure de plus.</li>
+  </ol>
+  <div class="exo-livrable">Livrable attendu : la fonctionnalité, le test associé au vert, et vos trois phrases.</div>
+  <div class="src">Référence : codebase <b>TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, et <b>docs/architecture.md</b> de la piste choisie. Référence : fiche d'atelier détaillée et espaces à remplir — <b>03_Exercices/Cahier_Participant_TaskFlow.html</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">14</div>
+  <div class="section-tag">Module 14 — référence</div>
+  <h1 class="section-title">Personnaliser Copilot</h1>
+  <p class="section-sub">Instructions, fichiers de prompt et skills : écrire une fois ce que vous répétez à chaque conversation.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Personnalisation</div>
+  <h2 class="slide-title">Le problème que cela résout</h2>
+  <ul class="points">
+    <li>Vous répétez les mêmes contraintes à chaque demande : « en français », « sans bibliothèque », « respecte les variables ».</li>
+    <li>Vos collègues ne les répètent pas, ou pas de la même façon : <b>le code généré diverge</b> d'une personne à l'autre.</li>
+    <li>Un nouvel arrivant ne les connaît pas du tout.</li>
+    <li>La personnalisation consiste à écrire ces contraintes <b>dans le dépôt, une fois, pour tout le monde</b>.</li>
+  </ul>
+  <div class="note">C'est le meilleur rapport effort/gain de tout l'écosystème Copilot. <b>Une page d'instructions bien écrite vaut mieux que dix prompts très longs.</b></div>
+  <div class="src">Source : VS Code Docs, « Custom instructions » — <a href="https://code.visualstudio.com/docs/agent-customization/custom-instructions" target="_blank" rel="noopener">code.visualstudio.com/docs/agent-customization/custom-instructions</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Instructions</div>
+  <h2 class="slide-title">Le fichier principal : copilot-instructions.md</h2>
+  <ul class="points">
+    <li>Emplacement unique : <b>.github/copilot-instructions.md</b>, à la racine du dépôt.</li>
+    <li>Il s'applique <b>automatiquement</b> à toutes les demandes faites dans ce projet : Chat, édition, et agents là où ils sont ouverts. Rien à activer, rien à mentionner.</li>
+    <li>Il est <b>versionné avec le code</b> : toute l'équipe en bénéficie, et il évolue par pull request comme le reste.</li>
+    <li>Contenu type : la nature du projet, les technologies, les conventions, ce qu'il ne faut jamais faire.</li>
+  </ul>
+  <div class="note">Il n'existe pas de version « profil utilisateur » de ce fichier précis. Pour une règle personnelle valable sur tous vos projets, voir AGENTS.md ou les instructions utilisateur, plus loin.</div>
+  <div class="src">Source : VS Code Docs, « Custom instructions » — <a href="https://code.visualstudio.com/docs/agent-customization/custom-instructions" target="_blank" rel="noopener">code.visualstudio.com/docs/agent-customization/custom-instructions</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Instructions</div>
+  <h2 class="slide-title">Exemple complet pour TaskFlow</h2>
+  <pre class="code"># TaskFlow — instructions de projet
+
+## Nature du projet
+Application de suivi de demandes internes. Piste web : HTML et CSS
+UNIQUEMENT, aucune ligne de JavaScript. Piste Java : JDK seul.
+Aucune bibliotheque, aucun serveur, aucune etape de construction.
+
+## Conventions
+- Noms et commentaires en francais.
+- Classes CSS prefixees tf-, variantes en double tiret : tf-btn--secondaire.
+- Toute couleur, espacement ou rayon vient de css/variables.css.
+- Pas de selecteur par identifiant, pas de !important.
+- responsive.css est toujours charge en dernier.
+
+## Accessibilite
+- Une action est un button, jamais un div cliquable.
+- Tout champ de formulaire a un label associe par for et id.
+- Un tableau a une caption et des en-tetes th avec scope.
+
+## Ce qu'il ne faut pas faire
+- Ne jamais introduire de JavaScript, meme pour simplifier une interaction.
+- Ne pas introduire de dependance externe.
+- Ne pas modifier DonneesDemo.java : jeu de donnees fige.
+- Ne pas reecrire un fichier entier quand un bloc suffit.</pre>
+  <div class="src">Fichier : <b>.github/copilot-instructions.md</b> — exemple fourni dans la codebase TaskFlow.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Instructions ciblées</div>
+  <h2 class="slide-title">*.instructions.md : la règle qui ne vaut que pour certains fichiers</h2>
+  <ul class="points">
+    <li>Fichiers <b>*.instructions.md</b>, rangés dans <b>.github/instructions/</b> — ou dans votre profil utilisateur pour une règle personnelle.</li>
+    <li>Le champ <b>applyTo</b> de l'en-tête indique à quels fichiers la règle s'applique, par motif. Sans applyTo, l'instruction doit être jointe manuellement.</li>
+    <li>C'est le bon outil quand deux zones d'un même projet suivent <b>des règles différentes</b> — typiquement un code hérité qu'on ne veut pas moderniser par erreur.</li>
+  </ul>
+  <pre class="code">---
+name: 'Conventions CSS de TaskFlow'
+description: 'Regles de style pour toutes les feuilles CSS du projet'
+applyTo: '**/*.css'
+---
+
+# Conventions CSS
+- Aucune couleur, aucun espacement en dur : tout passe par variables.css.
+- Pas de selecteur par identifiant. Classes prefixees tf-.
+- Pas de !important.
+- responsive.css est toujours charge en dernier.</pre>
+  <div class="note"><b>applyTo: "**"</b> applique l'instruction à tout le dépôt — utile pour tester le mécanisme avant de le restreindre.</div>
+  <div class="src">Source : VS Code Docs, « Custom instructions » — <a href="https://code.visualstudio.com/docs/agent-customization/custom-instructions" target="_blank" rel="noopener">code.visualstudio.com/docs/agent-customization/custom-instructions</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Skills</div>
+  <h2 class="slide-title">Les skills : une procédure, écrite une fois</h2>
+  <ul class="points">
+    <li>Une skill est un <b>dossier</b> contenant un fichier <b>SKILL.md</b>, et éventuellement des modèles ou des exemples.</li>
+    <li>Copilot la charge <b>quand elle est pertinente</b>, d'après sa description — ou quand vous l'appelez avec <b>/</b>.</li>
+    <li>Elle suit un standard ouvert : elle fonctionne dans l'éditeur, dans le terminal et ailleurs.</li>
+    <li>Avantage réel : <b>seul le contenu utile est chargé</b>, au moment où il sert. Cela coûte moins qu'une instruction permanente très longue.</li>
+  </ul>
+  <div class="src">Source : VS Code Docs, « Use Agent Skills » — <a href="https://code.visualstudio.com/docs/agent-customization/agent-skills" target="_blank" rel="noopener">code.visualstudio.com/docs/agent-customization/agent-skills</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Skills</div>
+  <h2 class="slide-title">Une skill pour TaskFlow, étape par étape</h2>
+  <pre class="code">---
+name: revue-taskflow
+description: Grille de relecture d'une modification de TaskFlow.
+  A utiliser avant d'accepter toute proposition de code sur ce projet.
+---
+
+# Relire une modification de TaskFlow
+
+Pour chaque proposition, verifier dans cet ordre et repondre point
+par point :
+
+1. Perimetre — quels fichiers sont touches ? Un fichier non concerne
+   a-t-il ete modifie ? Le jeu de donnees doit rester intact.
+2. Conventions — noms en francais, classes prefixees tf-, aucune
+   couleur hors css/variables.css, aucune valeur magique en Java.
+3. Perimetre technique — du JavaScript a-t-il ete ajoute sur la piste
+   HTML/CSS ? Une dependance externe a-t-elle ete introduite ?
+4. Accessibilite — les actions sont-elles des button ? Chaque champ
+   a-t-il son label ? Voir docs/checklist-accessibilite.md.
+5. Cas limites — texte tres long, valeur absente, ecran etroit.
+
+Terminer par la liste de ce que je dois verifier moi-meme.</pre>
+  <div class="src">Fichier : <b>.github/skills/revue-taskflow/SKILL.md</b> — exemple fourni dans la codebase TaskFlow.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Paramètres</div>
+  <h2 class="slide-title">Les réglages d'éditeur à connaître</h2>
+  <pre class="code">{
+  "chat.useAgentsMdFile": true,
+  "chat.useNestedAgentsMdFiles": true,
+  "chat.useClaudeMdFile": true,
+  "chat.includeApplyingInstructions": true,
+  "chat.instructionsFilesLocations": [".github/instructions"],
+  "github.copilot.chat.organizationInstructions.enabled": true
+}</pre>
+  <ul class="points" style="margin-top:.8rem;">
+    <li>À coller dans <b>settings.json</b> (réglages utilisateur) ou <b>.vscode/settings.json</b> (réglage de projet).</li>
+    <li>Trois commandes accélèrent la mise en place : <b>/init</b> analyse le projet et génère des instructions de base, <b>/create-instruction</b> génère un fichier ciblé, <b>/instructions</b> ouvre le menu de configuration.</li>
+    <li>Au-dessus du dépôt, une organisation comme Transactis peut définir des <b>instructions communes à tous ses dépôts</b> : elles s'ajoutent aux instructions de projet, elles ne les remplacent pas.</li>
+  </ul>
+  <table class="cmp">
+    <tr><th>Fichier</th><th>Emplacement</th><th>Portée</th></tr>
+    <tr><td>copilot-instructions.md</td><td>.github/</td><td>Tout le projet, automatiquement</td></tr>
+    <tr><td>*.instructions.md</td><td>.github/instructions/</td><td>Les fichiers visés par applyTo</td></tr>
+    <tr><td>SKILL.md</td><td>.github/skills/&lt;nom&gt;/</td><td>Une procédure, chargée quand elle est utile</td></tr>
+  </table>
+  <div class="note"><b>Instruction ou skill ?</b> Si la règle doit s'appliquer même quand vous avez oublié d'y penser, c'est une <b>instruction</b>. Si elle correspond à un moment précis de votre travail, c'est une <b>skill</b>.<br><b>Règle Transactis</b> — ces fichiers sont versionnés et partagés : aucun secret, aucune adresse de serveur interne, aucune donnée réelle.</div>
+  <div class="src">Source : VS Code Docs, « Custom instructions » — <a href="https://code.visualstudio.com/docs/agent-customization/custom-instructions" target="_blank" rel="noopener">code.visualstudio.com/docs/agent-customization/custom-instructions</a></div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">15</div>
+  <div class="section-tag">Module 15 — référence</div>
+  <h1 class="section-title">L'écosystème GitHub Copilot</h1>
+  <p class="section-sub">Tout ce qui existe autour de l'éditeur — et, à la fin de ce module, ce qui ne vous est pas ouvert chez Transactis.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Panorama</div>
+  <h2 class="slide-title">Les surfaces, en un tableau</h2>
+  <table class="cmp">
+    <tr><th>Surface</th><th>Ce qu'elle fait</th><th>Aujourd'hui</th></tr>
+    <tr><td>Complétion dans l'éditeur</td><td>Suggestions pendant la frappe, prédiction de la modification suivante.</td><td><b>Pratiquée</b></td></tr>
+    <tr><td>Chat dans l'éditeur</td><td>Questions, explications, propositions de code.</td><td><b>Pratiquée</b></td></tr>
+    <tr><td>Chat sur github.com</td><td>Questions sur un dépôt, un fichier, une pull request, depuis le navigateur.</td><td>Référence</td></tr>
+    <tr><td>Revue de code Copilot</td><td>Commentaires de revue automatiques sur une pull request.</td><td>Référence</td></tr>
+    <tr><td>Résumés de pull request</td><td>Résumé des modifications et des points à relire.</td><td>Référence</td></tr>
+    <tr><td>Copilot CLI</td><td>Un assistant dans le terminal.</td><td>Référence</td></tr>
+    <tr><td>Serveurs MCP</td><td>Connecter Copilot à des outils et sources de données.</td><td>Référence</td></tr>
+    <tr><td>Skills, plugins, hooks</td><td>Étendre et automatiser le comportement de l'assistant.</td><td>Référence</td></tr>
+    <tr><td>Mode agent et agents autonomes</td><td>Exécution enchaînée de plusieurs étapes sans intervention.</td><td><b>Non disponible</b></td></tr>
+  </table>
+  <div class="src">Source : GitHub Docs, « Copilot features » — <a href="https://docs.github.com/en/copilot/get-started/features" target="_blank" rel="noopener">docs.github.com/copilot/get-started/features</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">MCP</div>
+  <h2 class="slide-title">MCP — connecter Copilot à vos outils</h2>
+  <ul class="points">
+    <li>Le <b>Model Context Protocol</b> est un standard ouvert qui définit comment Copilot se connecte à des outils et des données situés <b>en dehors de votre code</b>.</li>
+    <li>Un serveur MCP expose des outils et des données selon ce protocole commun : documentation technique à jour, suivi de tickets, base de connaissances, système de fichiers restreint.</li>
+    <li>L'intérêt : l'assistant <b>cesse de deviner</b> et va chercher l'information à la source.</li>
+    <li>Le coût : chaque serveur ajouté est une <b>porte ouverte sur des données</b>, et une dépendance de plus. L'activation se fait <b>toolset par toolset</b>, selon le principe du moindre privilège.</li>
+  </ul>
+  <div class="note">Un serveur MCP de documentation est l'exemple le plus rentable : il évite les réponses fondées sur une version périmée d'une bibliothèque.<br><b>Gouvernance</b> — MCP est désactivé par défaut au niveau organisation. En installer un sur un projet Transactis relève d'un <b>usage structurant</b> au sens de la section 4 du guide : porté à la DSSI, analysé, inscrit au registre. <b>Ce n'est pas une décision individuelle, même si l'installation prend deux minutes.</b></div>
+  <div class="src">Source : GitHub Docs, « Model Context Protocol (MCP) » — <a href="https://docs.github.com/en/copilot/concepts/context/mcp" target="_blank" rel="noopener">docs.github.com/copilot/concepts/context/mcp</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Extensions</div>
+  <h2 class="slide-title">Plugins et hooks</h2>
+  <ul class="points">
+    <li><b>Plugin</b> — un paquet qui regroupe plusieurs éléments de personnalisation : skills, instructions, serveurs MCP, configuration. On l'installe d'un bloc, on le partage d'un bloc.</li>
+    <li><b>Hook</b> — une action déclenchée automatiquement à un moment donné : avant une modification, après une commande, en fin de session. Déclaré dans un fichier de configuration dédié.</li>
+    <li>Usage typique d'un hook : lancer le formateur de code après chaque écriture, ou bloquer l'écriture dans un dossier protégé.</li>
+    <li>Disponibilité et syntaxe <b>varient selon la version</b> installée et la surface utilisée.</li>
+  </ul>
+  <div class="note">Un hook <b>exécute du code automatiquement</b>. C'est utile, et c'est exactement le genre d'automatisation qui doit être examinée avant d'être mise en place sur un poste Transactis.<br><b>Les workflows agentiques</b> vont plus loin : des automatisations de dépôt écrites en langage naturel, compilées en workflows GitHub Actions et déclenchées par <b>on: daily</b>. Même principe du moindre privilège que MCP, même statut d'usage structurant.<br><b>Copilot CLI</b>, la <b>revue de code assistée</b> et le chat sur github.com complètent le tableau : présentés en référence, non pratiqués aujourd'hui. Leurs commandes sont dans la <b>Fiche des 100 commandes</b>.</div>
+  <div class="src">Source : GitHub Docs, « About plugins » — <a href="https://docs.github.com/en/copilot/concepts/agents/about-plugins" target="_blank" rel="noopener">docs.github.com/copilot/concepts/agents/about-plugins</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Non disponible chez Transactis</div>
+  <h2 class="slide-title">Ce qui n'est pas ouvert : le mode agent et les agents autonomes</h2>
+  <ul class="points">
+    <li><b>Le mode agent de l'éditeur</b> : l'assistant enchaîne seul lecture, modification, exécution de commandes et correction, jusqu'à estimer la tâche finie.</li>
+    <li><b>L'agent distant</b> : on lui confie une tâche, il travaille seul sur le dépôt, suit une phase de recherche puis de plan, et propose une pull request.</li>
+    <li><b>Les agents personnalisés et les sous-agents</b> : des assistants spécialisés que l'on définit dans des fichiers dédiés, et qui peuvent se déléguer du travail entre eux.</li>
+    <li><b>La délégation depuis le terminal</b>, par la commande dédiée.</li>
+  </ul>
+  <div class="note">Ces fonctions <b>ne sont pas disponibles dans le cadre de cette formation et ne sont pas à utiliser</b>. Elles sont présentées pour que vous sachiez de quoi il s'agit lorsqu'on vous en parlera, et pour que vous puissiez expliquer pourquoi vous ne les employez pas.</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, sections 3, 4, 6 et 7.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Non disponible chez Transactis</div>
+  <h2 class="slide-title">Ce que vous faites à la place</h2>
+  <table class="cmp">
+    <tr><th>Ce qu'un agent ferait seul</th><th>Ce que vous faites, vous</th></tr>
+    <tr><td>Lire le projet et décider quoi modifier</td><td>Vous ciblez le fichier avec #file ou une sélection, après avoir compris le code.</td></tr>
+    <tr><td>Enchaîner plusieurs modifications</td><td>Vous procédez en petits pas, en relisant chaque différence avant de l'appliquer.</td></tr>
+    <tr><td>Lancer les tests et corriger tout seul</td><td>Vous lancez les tests, vous lisez l'échec, vous demandez la cause, vous vérifiez la cause.</td></tr>
+    <tr><td>Ouvrir une pull request</td><td>Vous préparez la modification, vous la documentez, et un référent la valide.</td></tr>
+  </table>
+  <div class="note">Le résultat est plus lent d'un facteur deux ou trois sur une petite tâche. Il est <b>défendable ligne à ligne</b>, ce qui est la seule mesure qui compte au moment d'intégrer.</div>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, sections 3 et 6.</div>
+</section>
+
+<section class="slide slide-question">
+  <div class="q-tag">&#128172; Question de relance</div>
+  <div class="q-question">Si un collègue vous dit demain que le mode agent lui fait gagner deux heures par jour, que lui répondez-vous ?</div>
+  <div class="q-hint">Deux réponses valables, et complémentaires : le gain est réel mais <b>déplace le travail vers la relecture</b>, qui reste obligatoire ; et surtout, l'ouverture de ces modes n'est pas une décision individuelle — elle passe par la DSSI, au titre de la section 4 du guide. La bonne suite n'est pas d'interdire, c'est de <b>faire remonter la demande</b>.</div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">16</div>
+  <div class="section-tag">Module 16 — 17:00 à 17:20</div>
+  <h1 class="section-title">Les bonnes pratiques officielles</h1>
+  <p class="section-sub">Ce que GitHub recommande, dans sa documentation, confronté à ce que vous avez vécu aujourd'hui.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Récapitulatif pratique</div>
+  <h2 class="slide-title">Quel outil, pour quelle tâche</h2>
+  <table class="cmp">
+    <tr><th>Besoin</th><th>Ce que vous utilisez chez Transactis</th></tr>
+    <tr><td>Comprendre un fichier</td><td>Chat + <b>#file</b> + <b>/explain</b></td></tr>
+    <tr><td>Corriger un bug ciblé</td><td>Chat en ligne + <b>#selection</b> + <b>/fix</b></td></tr>
+    <tr><td>Vérifier qu'on n'a rien cassé</td><td><span class="track track-web">web</span> la checklist d'accessibilité, point par point — <span class="track track-java">java</span> Chat + <b>#selection</b> + <b>/tests</b>, puis exécution manuelle</td></tr>
+    <tr><td>Documenter une fonction</td><td>Chat en ligne + <b>#selection</b> + <b>/doc</b></td></tr>
+    <tr><td>Modifier plusieurs fichiers</td><td>Mode <b>Édition</b>, fichier par fichier, avec relecture de chaque différence</td></tr>
+    <tr><td>Tâche longue, déléguée</td><td><b>Non disponible</b> — vous procédez en petits pas (module 15)</td></tr>
+    <tr><td>Rédiger un mail ou un compte-rendu</td><td>Copilot Chat (Microsoft 365), pas GitHub Copilot</td></tr>
+  </table>
+  <div class="note"><b>Ce pour quoi la documentation officielle le dit meilleur</b> : écrire des tests et du code répétitif, déboguer et corriger de la syntaxe, expliquer et commenter du code, générer des expressions régulières. Les cinq ateliers de la journée correspondent point par point à cette liste. <b>Ce pour quoi il n'est pas conçu</b> : tout ce qui n'a pas de rapport avec le code — et votre règle métier, qu'il ne connaît pas.</div>
+  <div class="src">Source : GitHub Docs, « Best practices » et « Copilot features » — <a href="https://docs.github.com/en/copilot/get-started/features" target="_blank" rel="noopener">docs.github.com/copilot/get-started/features</a> · disponibilités selon le programme Transactis.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Documentation officielle</div>
+  <h2 class="slide-title">Vérifier le travail de Copilot</h2>
+  <ul class="points">
+    <li><b>Comprendre le code proposé avant de l'intégrer.</b> La documentation place ce point en premier.</li>
+    <li>Relire sur quatre axes : <b>fonctionnement, sécurité, lisibilité, maintenabilité</b>.</li>
+    <li>S'appuyer sur les outils existants : analyseurs statiques, analyse de code, tests automatisés.</li>
+    <li>Vérifier, le cas échéant, la ressemblance avec du code public existant.</li>
+  </ul>
+  <div class="note">Pour Transactis, ce point n'est pas une recommandation mais une <b>obligation</b> : validation par un développeur référent et audit par les outils standards, conformément à la PSSI (guide, section 7).</div>
+  <div class="src">Source : GitHub Docs, « Best practices for using GitHub Copilot » — <a href="https://docs.github.com/en/copilot/get-started/best-practices" target="_blank" rel="noopener">docs.github.com/copilot/get-started/best-practices</a></div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Documentation officielle</div>
+  <h2 class="slide-title">Une recommandation à ne pas oublier</h2>
+  <h3 class="subtitle">La documentation officielle se termine par un conseil que l'on saute toujours : <b>suivre le journal des nouveautés</b>.</h3>
+  <ul class="points">
+    <li>Les fonctions, les noms et les emplacements de fichiers changent <b>plusieurs fois par an</b>.</li>
+    <li>Ce support est daté : il décrit l'état de l'outil au moment de la formation, en septembre 2026.</li>
+    <li>Le réflexe durable n'est pas de retenir des noms de commandes, mais de <b>savoir où vérifier</b>.</li>
+    <li>Deux adresses suffisent : la documentation GitHub Copilot, et la documentation de votre éditeur.</li>
+  </ul>
+  <div class="note">Ce qui ne changera pas, en revanche : <b>cibler, demander, lire, vérifier, tester</b>. Et le cadre Transactis.</div>
+  <div class="src">Source : GitHub Docs, « Best practices for using GitHub Copilot » — <a href="https://docs.github.com/en/copilot/get-started/best-practices" target="_blank" rel="noopener">docs.github.com/copilot/get-started/best-practices</a></div>
+</section>
+
+<section class="slide slide-divider">
+  <div class="section-num">17</div>
+  <div class="section-tag">Module 17 — 17:20 à 17:45</div>
+  <h1 class="section-title">Synthèse</h1>
+  <p class="section-sub">Ce que vous emportez, et ce que vous éviterez dès demain matin.</p>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Synthèse</div>
+  <h2 class="slide-title">Les dix erreurs les plus fréquentes</h2>
+  <ul class="points">
+    <li>Accepter une suggestion <b>sans la lire</b>, parce qu'elle a l'air correcte.</li>
+    <li>Coller une <b>trace d'erreur complète</b>, avec les données réelles qu'elle contient.</li>
+    <li>Demander « améliore » <b>sans dire ce qui ne va pas</b>.</li>
+    <li>Envoyer le projet entier pour une question portant sur une fonction.</li>
+    <li>Croire qu'un <b>test généré</b> est un test exécuté.</li>
+    <li>Garder une conversation ouverte toute la journée, tous sujets confondus.</li>
+    <li>Utiliser le modèle le plus lourd par défaut.</li>
+    <li>Laisser l'assistant renommer ou restructurer <b>au-delà du périmètre</b> demandé.</li>
+    <li>Documenter ce que fait le code au lieu d'expliquer <b>pourquoi</b> il le fait ainsi.</li>
+    <li>Oublier que la <b>responsabilité</b> de ce qui est intégré reste la vôtre.</li>
+  </ul>
+  <div class="src">Sources : Guide des bonnes pratiques Sécurité — Transactis, sections 3, 5, 7 et 8 · GitHub Docs, « Best practices ».</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Synthèse</div>
+  <h2 class="slide-title">Ce qu'il faut retenir</h2>
+  <ul class="points">
+    <li><b>Le cadre d'abord.</b> C2 au maximum, jamais de donnée sensible, jamais de module critique de sécurité.</li>
+    <li><b>Cibler avant de demander.</b> Le plus petit contexte qui permet de répondre.</li>
+    <li><b>Quatre blocs.</b> Contexte, tâche, contraintes, résultat attendu.</li>
+    <li><b>Lire, toujours.</b> Une réponse bien écrite n'est pas une réponse juste.</li>
+    <li><b>Vérifier et tester.</b> Le vert est la seule preuve.</li>
+    <li><b>Assumer.</b> Ce que vous validez, vous le signez.</li>
+    <li><b>Pas de mode agent.</b> Ni agent distant, ni agent personnalisé, ni délégation. Vous savez désormais dire pourquoi.</li>
+  </ul>
+  <div class="note">Le réflexe de la journée, une dernière fois — <b>cibler, demander, lire, vérifier, tester</b>.</div>
+  <div class="src">Sources : Guide des bonnes pratiques Sécurité — Transactis · GitHub Docs, « Best practices ».</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Référence</div>
+  <h2 class="slide-title">Glossaire — les notions de base</h2>
+  <table class="cmp">
+    <tr><th>Terme</th><th>Définition en langage courant</th></tr>
+    <tr><td>IA générative</td><td>Programme qui produit du contenu nouveau plutôt que de le retrouver.</td></tr>
+    <tr><td>Modèle</td><td>Le programme entraîné qui répond. On peut en changer.</td></tr>
+    <tr><td>LLM</td><td>Grand modèle de langage, spécialisé dans le texte et le code.</td></tr>
+    <tr><td>Token</td><td>Morceau de texte manipulé par le modèle. Unité de consommation.</td></tr>
+    <tr><td>AI Credit</td><td>Unité de facturation à l'usage. 1 credit = 0,01 $.</td></tr>
+    <tr><td>Contexte</td><td>Tout ce que le modèle reçoit pour répondre : question, fichiers, historique.</td></tr>
+    <tr><td>Prompt</td><td>La demande que vous formulez.</td></tr>
+    <tr><td>Complétion</td><td>Suggestion de code proposée pendant la frappe.</td></tr>
+    <tr><td>Hallucination</td><td>Réponse inventée, présentée avec la même assurance qu'une réponse exacte.</td></tr>
+    <tr><td>Anonymisation</td><td>Remplacement des données réelles par des valeurs neutres avant tout envoi.</td></tr>
+    <tr><td>PSSI · DSSI</td><td>Politique de sécurité des systèmes d'information · Direction qui en a la charge.</td></tr>
+  </table>
+  <div class="src">Sources : Guide des bonnes pratiques Sécurité — Transactis · GitHub Docs, glossaire de facturation et de fonctionnalités.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Sources — 1/2</div>
+  <h2 class="slide-title">Sources : documents Transactis</h2>
+  <ul class="points">
+    <li><b>Guide des bonnes pratiques Sécurité : Usage de l'Intelligence Artificielle générative</b> — Transactis, Confidentialité C1. Reproduit intégralement au module 1 ; fichier d'origine dans <b>00_Guide_Institutionnel</b>.</li>
+    <li><b>Programme pédagogique « GitHub Copilot pour débutants »</b> — Transactis / Digital House Company. Fichier dans <b>00_Guide_Institutionnel</b>.</li>
+    <li><b>Recommandations de l'ANSSI sur l'IA générative</b>, avril 2024 — référencées par le guide Transactis.</li>
+    <li><b>Politique de sécurité des systèmes d'information de Transactis</b> — référencée par le guide.</li>
+    <li><b>Codebase d'exercice TaskFlow</b> — <b>02_Codebase_TaskFlow</b>, pistes web et java, avec docs/architecture.md et la checklist de relecture.</li>
+  </ul>
+  <div class="note"><b>Contact</b> — accompagnement-securite@transactis.fr pour toute demande d'accompagnement ou déclaration d'usage.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Sources — 2/2</div>
+  <h2 class="slide-title">Sources : documentation officielle</h2>
+  <table class="cmp">
+    <tr><th>Page</th><th>Adresse</th></tr>
+    <tr><td>Qu'est-ce que GitHub Copilot</td><td>docs.github.com/copilot/get-started/what-is-github-copilot</td></tr>
+    <tr><td>Bonnes pratiques d'utilisation</td><td>docs.github.com/copilot/get-started/best-practices</td></tr>
+    <tr><td>Panorama des fonctionnalités</td><td>docs.github.com/copilot/get-started/features</td></tr>
+    <tr><td>Aide-mémoire du chat</td><td>docs.github.com/copilot/reference/chat-cheat-sheet</td></tr>
+    <tr><td>Raccourcis clavier</td><td>docs.github.com/copilot/reference/keyboard-shortcuts</td></tr>
+    <tr><td>Modèles pris en charge</td><td>docs.github.com/copilot/reference/ai-models/supported-models</td></tr>
+    <tr><td>Formulation des demandes</td><td>docs.github.com/copilot/concepts/prompting</td></tr>
+    <tr><td>Facturation à l'usage, budgets, requêtes</td><td>docs.github.com/copilot/concepts/billing</td></tr>
+    <tr><td>MCP · plugins · workflows agentiques</td><td>docs.github.com/copilot/concepts/context/mcp · /concepts/agents</td></tr>
+    <tr><td>Bonnes pratiques Copilot CLI</td><td>docs.github.com/copilot/how-tos/copilot-cli</td></tr>
+    <tr><td>Chat et contexte dans l'éditeur</td><td>code.visualstudio.com/docs/copilot/chat</td></tr>
+    <tr><td>Instructions personnalisées · skills · fichiers de prompt</td><td>code.visualstudio.com/docs/agent-customization/</td></tr>
+    <tr><td>Dépôt communautaire</td><td>github.com/github/awesome-copilot</td></tr>
+  </table>
+  <div class="note">Toutes ces pages ont été consultées en <b>septembre 2026</b>. En cas de doute, la page officielle a toujours raison sur ce support — et le guide Transactis a toujours raison sur la page officielle.</div>
+</section>
+
+<section class="slide">
+  <div class="slide-tag">Après la formation</div>
+  <h2 class="slide-title">Votre plan des trois prochaines semaines</h2>
+  <ul class="points">
+    <li><b>Semaine 1</b> — n'utilisez Copilot que pour <b>comprendre et documenter</b>. Aucune génération. Vous construisez le réflexe de lecture.</li>
+    <li><b>Semaine 2</b> — ajoutez la <b>génération de tests</b> sur du code que vous connaissez déjà. Vous mesurez l'écart entre généré et exécuté.</li>
+    <li><b>Semaine 3</b> — <b>générez du code</b>, sur des périmètres courts, avec un test systématique.</li>
+    <li><b>En continu</b> — à chaque usage, la question des six secondes avant d'envoyer.</li>
+    <li><b>Si l'usage devient systématique</b> dans votre équipe — contactez la DSSI pour l'inscription au registre des usages.</li>
+  </ul>
+  <div class="src">Source : Guide des bonnes pratiques Sécurité — Transactis, section 4 (gouvernance et registre des usages).</div>
+</section>
+
+<section class="slide slide-cta">
+  <h2>Une journée, un réflexe</h2>
+  <p>Cibler, demander, lire, vérifier, tester. Le reste s'apprend en pratiquant — le cadre Transactis, lui, s'applique dès le premier prompt de demain matin.</p>
+  <div class="cta-links">
+    <a href="mailto:hello@dhcompany.pro">hello@dhcompany.pro</a>
+    <a href="mailto:accompagnement-securite@transactis.fr">accompagnement-securite@transactis.fr</a>
+  </div>
+</section>
+
+<!-- SLIDES_END -->
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const progressBar = document.getElementById('progress');
+
+const relanceTemplates = [
+  t => `\u{1F4AC} À demander au groupe : qu'est-ce que « ${t} » change concrètement dans votre équipe ?`,
+  t => `\u{1F4AC} Tour de table éclair : qui, dans la salle, a déjà été confronté à ce sujet ?`,
+  t => `\u{1F4AC} Une minute de réflexion : sur une échelle de 1 à 5, ce point est-il déjà maîtrisé chez vous ?`,
+  t => `\u{1F4AC} Question flash : quel est, selon vous, le principal risque si l'on ignore ce point ?`,
+  t => `\u{1F4AC} Discussion : qui, dans votre équipe, pourrait porter ce sujet en premier ?`,
+  t => `\u{1F4AC} À chaud : qu'est-ce qui vous surprend le plus dans « ${t} » ?`,
+];
+slides.forEach((s, i) => {
+  if (s.classList.contains('slide-question') || s.classList.contains('slide-cover')) return;
+  const titleEl = s.querySelector('.slide-title, .section-title, .an-title, .demo-title, .exo-title, .quote-text');
+  const title = titleEl ? titleEl.textContent.trim() : '';
+  const div = document.createElement('div');
+  div.className = 'mini-relance';
+  div.textContent = relanceTemplates[i % relanceTemplates.length](title);
+  s.appendChild(div);
+});
+
+function goTo(n){
+  slides[current].classList.remove('active');
+  current = Math.max(0, Math.min(n, slides.length - 1));
+  slides[current].classList.add('active');
+  progressBar.style.width = ((current + 1) / slides.length * 100) + '%';
+  document.getElementById('counter').textContent = (current + 1) + ' / ' + slides.length;
+}
+document.getElementById('prevBtn').addEventListener('click', ()=>goTo(current-1));
+document.getElementById('nextBtn').addEventListener('click', ()=>goTo(current+1));
+document.getElementById('pdfBtn').addEventListener('click', ()=>window.print());
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
+  if (e.key === 'p' || e.key === 'P') window.print();
+});
+let xStart = null;
+document.addEventListener('touchstart', e => { xStart = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+  const diff = xStart - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 50) diff > 0 ? goTo(current + 1) : goTo(current - 1);
+});
+goTo(0);
+</script>
+</body>
+</html>

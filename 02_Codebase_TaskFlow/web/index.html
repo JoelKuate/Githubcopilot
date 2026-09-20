@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow — tableau de suivi</title>
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<header class="tf-entete">
+  <p class="tf-marque">TaskFlow</p>
+  <nav class="tf-nav" aria-label="Navigation principale">
+    <a href="index.html" aria-current="page">Tableau de suivi</a>
+    <a href="nouvelle-demande.html">Nouvelle demande</a>
+    <a href="detail.html">Fiche d'exemple</a>
+    <a href="about.html">À propos</a>
+  </nav>
+</header>
+
+<main class="tf-principal">
+  <h1>Suivi des demandes internes</h1>
+  <p class="tf-aide">Dix-huit demandes de démonstration, entièrement fictives. Date de référence du tableau : 14 septembre 2026.</p>
+
+  <section class="tf-indicateurs" aria-label="Indicateurs">
+    <p class="tf-carte"><span class="tf-carte-valeur">18</span> demandes au total</p>
+    <p class="tf-carte"><span class="tf-carte-valeur">16</span> ouvertes</p>
+    <p class="tf-carte"><span class="tf-carte-valeur">3</span> urgentes ouvertes</p>
+    <p class="tf-carte"><span class="tf-carte-valeur">2</span> échéances dépassées</p>
+  </section>
+
+  <table class="tf-tableau">
+    <thead>
+      <tr>
+        <th>Référence</th>
+        <th>Objet</th>
+        <th>Service</th>
+        <th>Priorité</th>
+        <th>Statut</th>
+        <th>Échéance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>DEM-2026-0101</td><td>Accès au répertoire partagé Comptabilité</td><td>Comptabilité</td><td><span class="tf-badge tf-badge--normale">normale</span></td><td>en cours</td><td>18 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0102</td><td>Remplacement d'un poste de travail</td><td>Informatique</td><td><span class="tf-badge tf-badge--basse">basse</span></td><td>nouvelle</td><td>30 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0103</td><td>Mise à jour de la fiche de poste</td><td>RH</td><td><span class="tf-badge tf-badge--normale">normale</span></td><td>en attente</td><td>15 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0104</td><td>Revue de la clause de confidentialité</td><td>Juridique</td><td><span class="tf-badge tf-badge--haute">haute</span></td><td>en cours</td><td>16 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0105</td><td>Commande de fournitures de bureau</td><td>Logistique</td><td><span class="tf-badge tf-badge--basse">basse</span></td><td>clôturée</td><td>25 août 2026</td></tr>
+      <tr><td>DEM-2026-0106</td><td>Ouverture d'un compte de messagerie</td><td>Informatique</td><td><span class="tf-badge tf-badge--urgente">urgente</span></td><td>en cours</td><td>15 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0107</td><td>Archivage des dossiers 2024</td><td>Comptabilité</td><td><span class="tf-badge tf-badge--normale">normale</span></td><td>en attente</td><td><span class="tf-echeance--depassee">5 septembre 2026</span></td></tr>
+      <tr><td>DEM-2026-0108</td><td>Échéance de renouvellement du bail</td><td>Juridique</td><td><span class="tf-badge tf-badge--haute">haute</span></td><td>nouvelle</td><td>22 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0109</td><td>Formation bureautique pour trois agents</td><td>RH</td><td><span class="tf-badge tf-badge--basse">basse</span></td><td>nouvelle</td><td>9 octobre 2026</td></tr>
+      <tr><td>DEM-2026-0110</td><td>Incident sur l'imprimante du 2e étage</td><td>Informatique</td><td><span class="tf-badge tf-badge--urgente">urgente</span></td><td>en cours</td><td><span class="tf-echeance--proche">14 septembre 2026</span></td></tr>
+      <tr><td>DEM-2026-0111</td><td>Rapprochement bancaire du trimestre</td><td>Comptabilité</td><td><span class="tf-badge tf-badge--haute">haute</span></td><td>en cours</td><td>15 octobre 2026</td></tr>
+      <tr><td>DEM-2026-0112</td><td>Badge d'accès pour un nouvel arrivant</td><td>RH</td><td><span class="tf-badge tf-badge--urgente">urgente</span></td><td>nouvelle</td><td>19 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0113</td><td>Vérification des extincteurs</td><td>Logistique</td><td><span class="tf-badge tf-badge--normale">normale</span></td><td>en attente</td><td>25 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0114</td><td>Mise à jour du règlement intérieur</td><td>Juridique</td><td><span class="tf-badge tf-badge--normale">normale</span></td><td>en cours</td><td>28 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0115</td><td>Sauvegarde du serveur de fichiers</td><td>Informatique</td><td><span class="tf-badge tf-badge--haute">haute</span></td><td>nouvelle</td><td>17 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0116</td><td>Note de frais du mois d'août</td><td>Comptabilité</td><td><span class="tf-badge tf-badge--basse">basse</span></td><td>clôturée</td><td>10 septembre 2026</td></tr>
+      <tr><td>DEM-2026-0117</td><td>Aménagement de la salle de réunion</td><td>Logistique</td><td><span class="tf-badge tf-badge--basse">basse</span></td><td>en attente</td><td>2 octobre 2026</td></tr>
+      <tr><td>DEM-2026-0118</td><td>Entretien annuel : planification</td><td>RH</td><td><span class="tf-badge tf-badge--normale">normale</span></td><td>nouvelle</td><td><span class="tf-echeance--depassee">27 décembre 2026</span></td></tr>
+    </tbody>
+  </table>
+
+  <p class="tf-aide">Pour consulter une demande, voir <a href="detail.html">ici</a>.</p>
+</main>
+
+<footer class="tf-pied"><p>TaskFlow — codebase d'exercice. Aucune donnée réelle.</p></footer>
+</body>
+</html>

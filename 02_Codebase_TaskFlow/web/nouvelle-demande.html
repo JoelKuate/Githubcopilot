@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow — nouvelle demande</title>
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<header class="tf-entete">
+  <p class="tf-marque">TaskFlow</p>
+  <nav class="tf-nav" aria-label="Navigation principale">
+    <a href="index.html">Tableau de suivi</a>
+    <a href="nouvelle-demande.html" aria-current="page">Nouvelle demande</a>
+    <a href="detail.html">Fiche d'exemple</a>
+    <a href="about.html">À propos</a>
+  </nav>
+</header>
+
+<main class="tf-principal">
+  <h1>Déposer une demande</h1>
+  <p class="tf-aide">Ce formulaire est volontairement statique : il n'enregistre rien, il sert de support d'exercice.</p>
+
+  <form class="tf-formulaire">
+    <p class="tf-champ">
+      <input type="text" id="tf-objet" placeholder="Objet de la demande">
+    </p>
+    <p class="tf-champ">
+      <label for="tf-service">Service concerné</label>
+      <select id="tf-service">
+        <option value="">Choisir…</option>
+        <option>Comptabilité</option>
+        <option>Informatique</option>
+        <option>Juridique</option>
+        <option>Logistique</option>
+        <option>RH</option>
+      </select>
+    </p>
+    <p class="tf-champ">
+      <label for="tf-priorite">Priorité</label>
+      <select id="tf-priorite">
+        <option>basse</option>
+        <option selected>normale</option>
+        <option>haute</option>
+        <option>urgente</option>
+      </select>
+    </p>
+    <p class="tf-champ">
+      <label for="tf-echeance">Échéance souhaitée</label>
+      <input type="date" id="tf-echeance">
+    </p>
+    <p><div class="tf-btn">Vérifier la demande</div></p>
+  </form>
+</main>
+
+<footer class="tf-pied"><p>TaskFlow — codebase d'exercice. Aucune donnée réelle.</p></footer>
+</body>
+</html>

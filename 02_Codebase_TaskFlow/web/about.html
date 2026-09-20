@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskFlow — à propos</title>
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+<header class="tf-entete">
+  <p class="tf-marque">TaskFlow</p>
+  <nav class="tf-nav" aria-label="Navigation principale">
+    <a href="index.html">Tableau de suivi</a>
+    <a href="nouvelle-demande.html">Nouvelle demande</a>
+    <a href="detail.html">Fiche d'exemple</a>
+    <a href="about.html" aria-current="page">À propos</a>
+  </nav>
+</header>
+
+<main class="tf-principal">
+  <h1>À propos de TaskFlow</h1>
+  <p class="tf-aide">Codebase d'exercice de la formation GitHub Copilot pour débutants — Transactis.</p>
+
+  <h2>Ce que contient ce projet</h2>
+  <table class="tf-tableau">
+    <caption class="tf-legende">Les fichiers du projet</caption>
+    <thead>
+      <tr><th scope="col">Fichier</th><th scope="col">Rôle</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>index.html</td><td>Le tableau de suivi des dix-huit demandes</td></tr>
+      <tr><td>nouvelle-demande.html</td><td>Le formulaire de dépôt, statique</td></tr>
+      <tr><td>detail.html</td><td>La fiche d'une demande à échéance proche</td></tr>
+      <tr><td>detail-depassee.html</td><td>La fiche d'une demande dont l'échéance est dépassée</td></tr>
+      <tr><td>about.html</td><td>Cette page</td></tr>
+      <tr><td>css/variables.css</td><td>Les jetons de design — source unique des couleurs</td></tr>
+      <tr><td>css/base.css</td><td>La remise à zéro et les styles de base</td></tr>
+      <tr><td>css/layout.css</td><td>La mise en page générale</td></tr>
+      <tr><td>css/components.css</td><td>Les composants : cartes, badges, tableau, fiche</td></tr>
+      <tr><td>css/responsive.css</td><td>Les adaptations aux petits écrans — chargé en dernier</td></tr>
+      <tr><td>css/legacy-styles.css</td><td>Feuille héritée, volontairement mal écrite</td></tr>
+      <tr><td>docs/</td><td>Architecture, conventions et checklist d'accessibilité</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Aucune donnée réelle</h2>
+  <p>Les dix-huit demandes affichées sont fictives. Aucune donnée personnelle, aucune référence client,
+     aucun secret technique. Ce projet respecte la section 5 du guide de sécurité Transactis.</p>
+
+  <h2>Aucun JavaScript</h2>
+  <p>Ce projet est volontairement écrit en HTML et CSS uniquement, sans une ligne de JavaScript,
+     pour rester accessible à un public débutant. Les participants qui veulent travailler sur du code
+     avec logique disposent de la piste Java, dans le dossier voisin.</p>
+</main>
+
+<footer class="tf-pied"><p>TaskFlow — codebase d'exercice. Aucune donnée réelle.</p></footer>
+</body>
+</html>

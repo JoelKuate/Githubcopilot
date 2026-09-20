@@ -1,0 +1,38 @@
+/*
+ * TaskFlow - FEUILLE HERITEE, volontairement mal ecrite.
+ *
+ * NOTE PEDAGOGIQUE : ce fichier est la cible de l'atelier 2. Il cumule les
+ * defauts que l'on trouve dans un CSS ancien : selecteurs par identifiant,
+ * valeurs de couleur et d'espacement ecrites en dur, classes redondantes,
+ * imbrication sur quatre niveaux, !important.
+ *
+ * Objectif de l'atelier : le reecrire avec les jetons de css/variables.css,
+ * SANS changer le rendu visuel.
+ */
+
+#encartAncien {
+  margin-top: 40px !important;
+  padding: 16px;
+  background-color: #f2f7f7;
+  border: 1px solid #d7e6e4;
+  border-radius: 8px;
+}
+
+#encartAncien div.card div.card-title.old {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0b6e68;
+  margin-bottom: 8px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+#encartAncien div.card div.card-text.old {
+  font-size: 14px;
+  color: #8fa2a8;
+  line-height: 1.5;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+#encartAncien div.card.old { margin: 0px; }
+#encartAncien .card { margin: 0px; }
+#encartAncien div.card { margin: 0px; }
