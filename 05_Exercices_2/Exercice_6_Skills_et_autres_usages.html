@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercice 6 — Skills, instructions et autres usages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#0E8C86;--accent2:#0B6E68;--navy:#0B2D48;--text:#16212B;--text2:#4B5C63;--card:#EAF4F3;--border:#D7E6E4;--warn:#B9740A;--good:#1F9D67;--bad:#C1443B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.55;}
+.page{max-width:920px;margin:0 auto;padding:44px 32px 80px;}
+.kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:.4rem;}
+h1{font-size:2rem;color:var(--navy);margin-bottom:.35rem;}
+.sous{color:var(--text2);margin-bottom:1rem;}
+.bandeau{display:flex;gap:1.2rem;flex-wrap:wrap;margin:1.2rem 0 1.6rem;}
+.bandeau div{border:1px solid var(--border);border-radius:8px;padding:.55rem .9rem;background:var(--card);font-size:.9rem;color:var(--text2);min-width:150px;}
+.bandeau b{display:block;color:var(--navy);font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.15rem;}
+.meta{display:flex;gap:1.4rem;flex-wrap:wrap;margin:0 0 1.8rem;}
+.meta label{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);font-weight:700;display:block;margin-bottom:.22rem;}
+input[type=text],input[type=date]{font:inherit;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;min-width:190px;}
+.objectif{background:var(--card);border-left:4px solid var(--accent);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.6rem;color:var(--text2);}
+.objectif b{color:var(--navy);}
+h2{font-size:1.18rem;color:var(--navy);margin:2.3rem 0 .5rem;padding-top:1.2rem;border-top:2px solid var(--card);}
+h2 .num{display:inline-block;background:var(--navy);color:#fff;border-radius:6px;font-size:.82rem;padding:.12rem .5rem;margin-right:.5rem;vertical-align:middle;}
+.consigne{color:var(--text2);margin:.3rem 0 .6rem;}
+pre{background:#08202F;color:#D9EDEB;padding:.75rem 1rem;border-radius:8px;font-size:.87rem;line-height:1.5;overflow-x:auto;margin:.6rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;}
+.attendu{border:1px solid var(--border);border-left:4px solid var(--good);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.attendu b{color:var(--text);}
+.piege{background:#FFF8ED;border-left:4px solid var(--warn);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.rep{margin:.6rem 0 .3rem;}
+.rep label{display:block;font-size:.83rem;font-weight:700;color:var(--accent2);margin-bottom:.25rem;}
+textarea{width:100%;min-height:66px;font:inherit;padding:.55rem .7rem;border:1px solid var(--border);border-radius:8px;resize:vertical;background:#FCFEFE;}
+.track{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.12rem .48rem;border-radius:999px;margin-right:.3rem;}
+.tw{background:#E3F2F1;color:var(--accent2);} .tj{background:#FBEEDC;color:var(--warn);} .tt{background:#EAF0F6;color:var(--navy);}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;}
+th,td{border:1px solid var(--border);padding:.42rem .62rem;text-align:left;font-size:.92rem;vertical-align:top;}
+th{background:var(--card);color:var(--accent2);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;}
+td input[type=text]{border:none;width:100%;min-width:0;padding:.12rem;}
+.bilan{border:2px solid var(--accent);border-radius:10px;padding:1rem 1.2rem;margin-top:2.2rem;background:#F7FCFB;}
+.bilan h3{color:var(--navy);font-size:1.05rem;margin-bottom:.5rem;}
+.bilan li{color:var(--text2);margin-left:1.1rem;margin-bottom:.25rem;font-size:.95rem;}
+.src{font-size:.84rem;color:var(--text2);margin-top:.5rem;}
+.src a{color:var(--accent2);}
+.pdf{position:fixed;top:14px;right:18px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.55rem 1.1rem;font:600 .85rem 'Inter',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(11,45,72,.25);}
+footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--text2);font-size:.86rem;}
+@media print{.pdf{display:none;}body{font-size:10pt;}.page{padding:0;}h2{page-break-after:avoid;}textarea{min-height:54px;}}
+</style>
+</head>
+<body>
+<button class="pdf" onclick="window.print()">&#11015; Exporter en PDF</button>
+<div class="page">
+
+<p class="kicker">Exercice pratique 6 · skills et autres usages</p>
+<h1>Skills, instructions et autres usages de GitHub Copilot</h1>
+<p class="sous">GitHub Copilot pour débutants — Transactis · terrain <b>TaskFlow</b></p>
+
+<div class="bandeau">
+  <div><b>Durée</b>55 minutes</div>
+  <div><b>Format</b>Individuel</div>
+  <div><b>Pistes</b><span class="track tt">les deux</span></div>
+  <div><b>Tâches</b>12 tâches pratiques</div>
+</div>
+
+<div class="meta">
+  <div><label for="nom">Nom</label><input type="text" id="nom"></div>
+  <div><label for="piste">Ma piste</label><input type="text" id="piste"></div>
+  <div><label for="date">Date</label><input type="date" id="date"></div>
+</div>
+
+<div class="objectif"><b>Objectif</b> — arrêter de répéter les mêmes contraintes à chaque demande. Vous allez écrire, tester et <b>faire échouer</b> une instruction de dépôt, une instruction ciblée et une skill, sur TaskFlow.<br>
+<b>Préparation</b> — dans <b>02_Codebase_TaskFlow</b>, renommez le dossier <b>dossier-github-a-renommer</b> en <b>.github</b>. Rechargez la fenêtre de l'éditeur.</div>
+
+<div class="piege"><b>Règle Transactis qui s'applique aussi ici</b> — ces fichiers sont versionnés et partagés avec toute l'équipe. <b>Aucun secret, aucune adresse de serveur interne, aucune donnée réelle</b> ne doit y figurer. Ce sont des documents de projet, pas des notes personnelles.</div>
+
+<h2><span class="num">1</span>Mesurer l'état sans instructions</h2>
+<p class="consigne">Avant de renommer le dossier, dans une conversation neuve :</p>
+<pre>#file css/components.css
+Ajoute une variante compacte du badge de priorite.</pre>
+<div class="rep"><label>La proposition respecte-t-elle les conventions du projet — préfixe <b>tf-</b>, jetons de <b>variables.css</b>, aucun JavaScript ? Notez précisément ce qui cloche.</label><textarea style="min-height:74px"></textarea></div>
+
+<h2><span class="num">2</span>Activer les instructions et refaire la même demande</h2>
+<p class="consigne">Renommez maintenant le dossier en <b>.github</b>, rechargez l'éditeur, ouvrez une <b>nouvelle</b> conversation, et envoyez <b>exactement la même demande</b>.</p>
+<div class="rep"><label>Ce qui change dans la réponse, sans que je l'aie demandé</label><textarea style="min-height:74px"></textarea></div>
+<div class="attendu"><b>C'est tout l'intérêt du mécanisme</b> — une page d'instructions bien écrite vaut mieux que dix prompts très longs. Vous n'avez rien à mentionner : le fichier est lu automatiquement.</div>
+
+<h2><span class="num">3</span>Lire ce qui pilote la réponse</h2>
+<p class="consigne">Ouvrez <b>.github/copilot-instructions.md</b> et repérez les règles qui ont produit la différence.</p>
+<table>
+  <tr><th>Différence observée</th><th>La règle qui l'a produite</th></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td></tr>
+</table>
+
+<h2><span class="num">4</span>Ajouter votre propre règle — et la voir s'appliquer</h2>
+<p class="consigne">Ajoutez une règle concrète et vérifiable à la fin de <b>copilot-instructions.md</b>, par exemple :</p>
+<pre>- Toute nouvelle classe CSS doit etre documentee par un commentaire d'une ligne
+  indiquant sur quelles pages elle est utilisee.</pre>
+<div class="rep"><label>Ma règle</label><textarea style="min-height:48px"></textarea></div>
+<div class="rep"><label>La demande de test que j'ai envoyée, et le résultat</label><textarea style="min-height:70px"></textarea></div>
+<div class="piege">Une règle du type « écris du code de qualité » n'a <b>aucun effet</b> et occupe de la place. Le test : peut-on vérifier objectivement qu'elle est respectée ?</div>
+
+<h2><span class="num">5</span>Une instruction qui ne vaut que pour certains fichiers</h2>
+<p class="consigne">Ouvrez <b>.github/instructions/css.instructions.md</b> et lisez son en-tête <b>applyTo</b>.</p>
+<pre>---
+name: 'Conventions CSS de TaskFlow'
+description: 'Regles de style pour toutes les feuilles CSS du projet'
+applyTo: '**/*.css'
+---</pre>
+<p class="consigne">Créez à côté un second fichier <b>legacy.instructions.md</b> avec <code>applyTo: 'css/legacy-styles.css'</code> et une règle propre au code hérité.</p>
+<div class="rep"><label>Ma règle pour le fichier hérité</label><textarea style="min-height:60px"></textarea></div>
+<div class="rep"><label>Test : je pose la même question sur <b>components.css</b> puis sur <b>legacy-styles.css</b>. Différence observée ?</label><textarea style="min-height:70px"></textarea></div>
+<div class="attendu"><b>Les couches s'additionnent</b> — organisation, dépôt, fichier ciblé, puis votre demande. Il n'y a pas de gagnant unique : c'est pourquoi il ne faut pas écrire d'instructions contradictoires.</div>
+
+<h2><span class="num">6</span>Lire une skill existante</h2>
+<p class="consigne">Ouvrez <b>.github/skills/revue-taskflow/SKILL.md</b>.</p>
+<table>
+  <tr><th>Champ de l'en-tête</th><th>Sa valeur ici</th><th>À quoi il sert</th></tr>
+  <tr><td><b>name</b></td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><b>description</b></td><td><input type="text"></td><td><input type="text"></td></tr>
+</table>
+<div class="attendu"><b>La description est le champ qui compte le plus</b> : c'est elle qui décide du chargement automatique. Mal écrite, la skill ne se déclenche jamais — ou se déclenche à contretemps.</div>
+
+<h2><span class="num">7</span>Déclencher la skill, des deux façons</h2>
+<pre>A · en commande :   /revue-taskflow   puis la proposition a relire
+B · automatiquement : « Relis cette modification avant que je l'accepte. »</pre>
+<div class="rep"><label>Les deux déclenchements fonctionnent-ils ? La réponse suit-elle réellement les cinq étapes écrites dans la skill ?</label><textarea style="min-height:74px"></textarea></div>
+<div class="piege"><b>Si la skill est ignorée</b>, la description ou les étapes sont trop vagues. C'est le diagnostic n° 1, et il vaut aussi pour vos futures skills.</div>
+
+<h2><span class="num">8</span>Écrire votre propre skill</h2>
+<p class="consigne">Créez <b>.github/skills/verifier-accessibilite/SKILL.md</b>. Partez de ce squelette et remplissez-le.</p>
+<pre>---
+name: verifier-accessibilite
+description: [quand faut-il l'utiliser ? c'est ce texte qui declenche la skill]
+---
+
+# [titre]
+
+Pour chaque page, verifier dans cet ordre et repondre point par point :
+
+1. [...]
+2. [...]
+3. [...]
+
+Terminer par la liste de ce que je dois verifier moi-meme au clavier.</pre>
+<div class="rep"><label>Ma description — la phrase qui décide du déclenchement</label><textarea style="min-height:52px"></textarea></div>
+<div class="rep"><label>Mes étapes</label><textarea style="min-height:100px"></textarea></div>
+
+<h2><span class="num">9</span>Tester sa skill — et la faire échouer</h2>
+<p class="consigne">Nouvelle conversation. Appelez votre skill sur <b>nouvelle-demande.html</b>.</p>
+<table>
+  <tr><th>Test</th><th>Résultat</th></tr>
+  <tr><td>La skill se déclenche-t-elle en commande ?</td><td><input type="text"></td></tr>
+  <tr><td>Se déclenche-t-elle automatiquement, sur une demande proche ?</td><td><input type="text"></td></tr>
+  <tr><td>La réponse suit-elle mes étapes, dans l'ordre ?</td><td><input type="text"></td></tr>
+  <tr><td>Une étape est-elle systématiquement sautée ?</td><td><input type="text"></td></tr>
+</table>
+<div class="rep"><label>Ce que j'ai corrigé dans ma skill après ce test</label><textarea></textarea></div>
+
+<h2><span class="num">10</span>Instruction ou skill : trancher sur des cas réels</h2>
+<table>
+  <tr><th>Ce que je veux</th><th>Instruction, ou skill ? Pourquoi</th></tr>
+  <tr><td>« Aucune couleur hors variables.css »</td><td><input type="text"></td></tr>
+  <tr><td>« Ma grille de relecture avant d'accepter une proposition »</td><td><input type="text"></td></tr>
+  <tr><td>« Réponds toujours en français »</td><td><input type="text"></td></tr>
+  <tr><td>« Les conventions propres aux fichiers de test »</td><td><input type="text"></td></tr>
+</table>
+<div class="attendu"><b>Le test</b> — si la règle doit s'appliquer <b>même quand vous avez oublié d'y penser</b>, c'est une instruction. Si elle correspond à un <b>moment précis</b> de votre travail, c'est une skill.</div>
+
+<h2><span class="num">11</span>Les autres usages — reconnaître et situer</h2>
+<p class="consigne">Ouvrez la <b>Fiche des 100 commandes</b> et classez ces usages, sans rien installer.</p>
+<table>
+  <tr><th>Usage</th><th>Ce qu'il apporte</th><th>Statut chez Transactis</th></tr>
+  <tr><td>Chat sur github.com</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Revue de code assistée sur une pull request</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Copilot CLI, dans le terminal</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Serveur MCP (documentation à jour)</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Plugin regroupant skills et instructions</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Hook déclenché après chaque écriture</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Workflow agentique <code>on: daily</code></td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Mode agent et agent distant</td><td><input type="text"></td><td><input type="text"></td></tr>
+</table>
+<div class="piege"><b>Installer un serveur MCP ou un plugin prend deux minutes.</b> Ce n'est pas pour autant une décision individuelle : c'est un <b>usage structurant</b> au sens de la section 4 du guide — porté à la DSSI, analysé, inscrit au registre.</div>
+
+<h2><span class="num">12</span>Préparer lundi</h2>
+<div class="rep"><label>La première règle que j'écrirai dans les instructions de <b>mon</b> projet</label><textarea style="min-height:52px"></textarea></div>
+<div class="rep"><label>La procédure que je transformerai en skill — celle que je réexplique le plus souvent</label><textarea style="min-height:52px"></textarea></div>
+<div class="rep"><label>Ce que je dirai à un collègue qui veut activer le mode agent</label><textarea style="min-height:70px"></textarea></div>
+
+<div class="bilan">
+  <h3>Bilan de l'exercice 6</h3>
+  <ul>
+    <li>J'ai constaté l'effet d'une instruction de dépôt, avant / après, sur la même demande.</li>
+    <li>J'ai écrit une règle <b>concrète et vérifiable</b>, et je l'ai vue s'appliquer.</li>
+    <li>J'ai créé une instruction ciblée par <b>applyTo</b>, et j'ai vu la différence entre deux fichiers.</li>
+    <li>J'ai écrit une skill, je l'ai testée, je l'ai <b>fait échouer</b>, et je l'ai corrigée.</li>
+    <li>Je sais dire, pour chaque usage avancé, ce qu'il apporte et son statut chez Transactis.</li>
+  </ul>
+  <div class="rep" style="margin-top:.8rem;"><label>Ce que je retiens, en une phrase</label><textarea></textarea></div>
+</div>
+
+<div class="src">Références : <b>02_Codebase_TaskFlow/.github/</b> (exemples fournis) · modules 14 et 15 du support · <b>04_Guides_Reference/Fiche_100_Commandes.html</b>, sections E et F.<br>
+Source : VS Code Docs, « Custom instructions », « Agent Skills », « Prompt files » · GitHub Docs, « About plugins » et « Model Context Protocol (MCP) » · Guide des bonnes pratiques Sécurité — Transactis, sections 4 et 5.</div>
+
+<footer>Exercice 6 — <b>GitHub Copilot pour débutants · Transactis</b> — Digital House Company, hello@dhcompany.pro</footer>
+</div>
+</body>
+</html>

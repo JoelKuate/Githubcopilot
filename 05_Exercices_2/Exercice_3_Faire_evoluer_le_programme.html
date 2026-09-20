@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercice 3 — Faire évoluer le programme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#0E8C86;--accent2:#0B6E68;--navy:#0B2D48;--text:#16212B;--text2:#4B5C63;--card:#EAF4F3;--border:#D7E6E4;--warn:#B9740A;--good:#1F9D67;--bad:#C1443B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.55;}
+.page{max-width:920px;margin:0 auto;padding:44px 32px 80px;}
+.kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:.4rem;}
+h1{font-size:2rem;color:var(--navy);margin-bottom:.35rem;}
+.sous{color:var(--text2);margin-bottom:1rem;}
+.bandeau{display:flex;gap:1.2rem;flex-wrap:wrap;margin:1.2rem 0 1.6rem;}
+.bandeau div{border:1px solid var(--border);border-radius:8px;padding:.55rem .9rem;background:var(--card);font-size:.9rem;color:var(--text2);min-width:150px;}
+.bandeau b{display:block;color:var(--navy);font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.15rem;}
+.meta{display:flex;gap:1.4rem;flex-wrap:wrap;margin:0 0 1.8rem;}
+.meta label{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);font-weight:700;display:block;margin-bottom:.22rem;}
+input[type=text],input[type=date]{font:inherit;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;min-width:190px;}
+.objectif{background:var(--card);border-left:4px solid var(--accent);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.6rem;color:var(--text2);}
+.objectif b{color:var(--navy);}
+h2{font-size:1.18rem;color:var(--navy);margin:2.3rem 0 .5rem;padding-top:1.2rem;border-top:2px solid var(--card);}
+h2 .num{display:inline-block;background:var(--navy);color:#fff;border-radius:6px;font-size:.82rem;padding:.12rem .5rem;margin-right:.5rem;vertical-align:middle;}
+.consigne{color:var(--text2);margin:.3rem 0 .6rem;}
+pre{background:#08202F;color:#D9EDEB;padding:.75rem 1rem;border-radius:8px;font-size:.87rem;line-height:1.5;overflow-x:auto;margin:.6rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;}
+.attendu{border:1px solid var(--border);border-left:4px solid var(--good);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.attendu b{color:var(--text);}
+.piege{background:#FFF8ED;border-left:4px solid var(--warn);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.rep{margin:.6rem 0 .3rem;}
+.rep label{display:block;font-size:.83rem;font-weight:700;color:var(--accent2);margin-bottom:.25rem;}
+textarea{width:100%;min-height:66px;font:inherit;padding:.55rem .7rem;border:1px solid var(--border);border-radius:8px;resize:vertical;background:#FCFEFE;}
+.track{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.12rem .48rem;border-radius:999px;margin-right:.3rem;}
+.tw{background:#E3F2F1;color:var(--accent2);} .tj{background:#FBEEDC;color:var(--warn);} .tt{background:#EAF0F6;color:var(--navy);}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;}
+th,td{border:1px solid var(--border);padding:.42rem .62rem;text-align:left;font-size:.92rem;vertical-align:top;}
+th{background:var(--card);color:var(--accent2);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;}
+td input[type=text]{border:none;width:100%;min-width:0;padding:.12rem;}
+.bilan{border:2px solid var(--accent);border-radius:10px;padding:1rem 1.2rem;margin-top:2.2rem;background:#F7FCFB;}
+.bilan h3{color:var(--navy);font-size:1.05rem;margin-bottom:.5rem;}
+.bilan li{color:var(--text2);margin-left:1.1rem;margin-bottom:.25rem;font-size:.95rem;}
+.src{font-size:.84rem;color:var(--text2);margin-top:.5rem;}
+.src a{color:var(--accent2);}
+.pdf{position:fixed;top:14px;right:18px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.55rem 1.1rem;font:600 .85rem 'Inter',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(11,45,72,.25);}
+footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--text2);font-size:.86rem;}
+@media print{.pdf{display:none;}body{font-size:10pt;}.page{padding:0;}h2{page-break-after:avoid;}textarea{min-height:54px;}}
+</style>
+</head>
+<body>
+<button class="pdf" onclick="window.print()">&#11015; Exporter en PDF</button>
+<div class="page">
+
+<p class="kicker">Exercice pratique 3 · sur le programme</p>
+<h1>Faire évoluer le programme, sous contrôle</h1>
+<p class="sous">GitHub Copilot pour débutants — Transactis · terrain <b>TaskFlow</b></p>
+
+<div class="bandeau">
+  <div><b>Durée</b>50 minutes</div>
+  <div><b>Format</b>Individuel</div>
+  <div><b>Pistes</b><span class="track tw">html/css</span><span class="track tj">java</span></div>
+  <div><b>Tâches</b>10 tâches pratiques</div>
+</div>
+
+<div class="meta">
+  <div><label for="nom">Nom</label><input type="text" id="nom"></div>
+  <div><label for="piste">Ma piste</label><input type="text" id="piste"></div>
+  <div><label for="date">Date</label><input type="date" id="date"></div>
+</div>
+
+<div class="objectif"><b>Objectif</b> — transformer un besoin exprimé en français en une modification <b>dont vous pouvez rendre compte</b>.<br>
+<b>Les quatre temps</b> — reformuler le besoin en une phrase vérifiable · localiser le fichier · décrire <b>le comportement voulu</b>, pas l'implémentation · relire ligne à ligne avant d'appliquer.</div>
+
+<h2><span class="num">1</span>Le besoin, tel qu'un utilisateur le formule</h2>
+<div class="piege"><b>« Sur la fiche d'une demande, je veux voir tout de suite si l'échéance est proche. »</b><br>C'est un besoin, pas une spécification. Personne ne vous dira quoi coder.</div>
+<div class="rep"><label>Ma reformulation, en une phrase <b>vérifiable</b> — je dois pouvoir l'ouvrir et le constater</label><textarea style="min-height:52px"></textarea></div>
+<div class="attendu"><b>Test</b> — si votre phrase contient déjà une solution technique (« ajouter une classe rouge »), elle est mauvaise. Recommencez par le <b>résultat visible</b>.</div>
+
+<h2><span class="num">2</span>Localiser, avec l'aide de Copilot</h2>
+<pre>#codebase
+Je veux modifier l'affichage de l'echeance sur la fiche d'une demande.
+Quels fichiers sont concernes, et lequel est le point d'entree ?
+Reponds par une liste de fichiers, sans code.</pre>
+<div class="rep"><label>Les fichiers annoncés — et ceux que j'ai vérifiés</label><textarea></textarea></div>
+
+<h2><span class="num">3</span>Écrire la demande en quatre blocs</h2>
+<div class="attendu"><b>Contexte</b> · <b>Tâche</b> · <b>Contraintes</b> · <b>Résultat attendu</b>. Trois à quatre phrases suffisent.</div>
+<div class="rep"><label>Ma demande complète, écrite avant de l'envoyer</label><textarea style="min-height:150px"></textarea></div>
+<div class="piege">Contraintes minimales à faire figurer : <span class="track tw">html/css</span> HTML et CSS uniquement, <b>aucun JavaScript</b>, aucune couleur hors <b>variables.css</b>, réutiliser les classes existantes, ne pas toucher au tableau de index.html. <span class="track tj">java</span> aucune valeur magique, <b>java.time</b>, signatures conservées, sortie lisible en console.</div>
+
+<h2><span class="num">4</span>Obtenir la proposition — et ne rien appliquer</h2>
+<p class="consigne">Envoyez la demande. <b>Ne cliquez pas sur Appliquer.</b> Lisez d'abord.</p>
+<table>
+  <tr><th>Ce que je lis</th><th>Ma réponse</th></tr>
+  <tr><td>Le nom du fichier en tête du bloc est-il le bon ?</td><td><input type="text"></td></tr>
+  <tr><td>Combien de lignes sont modifiées ?</td><td><input type="text"></td></tr>
+  <tr><td>Y a-t-il du code que je ne comprends pas ?</td><td><input type="text"></td></tr>
+  <tr><td>Les fichiers listés comme consultés sont-ils ceux que j'attendais ?</td><td><input type="text"></td></tr>
+</table>
+
+<h2><span class="num">5</span>La grille de relecture, point par point</h2>
+<table>
+  <tr><th>Point</th><th>Conforme ?</th><th>Ce que je refuse</th></tr>
+  <tr><td><b>Périmètre</b> — un bloc non concerné a-t-il été touché ?</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><b>Conventions</b> — préfixes, jetons, noms en français</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><b>Non demandé</b> — JavaScript, bibliothèque, dépendance ajoutée</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><b>Accessibilité</b> — bouton resté bouton, label présent, info pas portée par la seule couleur</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><b>Cas limites</b> — texte long, valeur absente, écran étroit</td><td><input type="text"></td><td><input type="text"></td></tr>
+</table>
+
+<h2><span class="num">6</span>Appliquer, puis vérifier sur les deux cas</h2>
+<p class="consigne"><span class="track tw">html/css</span> <b>detail.html</b> — échéance proche, puis <b>detail-depassee.html</b> — échéance dépassée.<br>
+<span class="track tj">java</span> <b>./run.sh fiche DEM-2026-0112</b> puis <b>./run.sh fiche DEM-2026-0107</b>.</p>
+<div class="rep"><label>Cas « proche » — ce que je vois</label><textarea style="min-height:48px"></textarea></div>
+<div class="rep"><label>Cas « dépassée » — ce que je vois</label><textarea style="min-height:48px"></textarea></div>
+<div class="attendu"><b>Attendu</b> — les deux cas sont lisibles, et l'information ne repose <b>pas uniquement sur la couleur</b>.</div>
+
+<h2><span class="num">7</span>Le cas limite qu'on oublie toujours</h2>
+<p class="consigne">Que se passe-t-il si l'échéance est <b>aujourd'hui</b> ? Vérifiez, et corrigez si nécessaire.</p>
+<pre>Le cas « echeance aujourd'hui » n'est pas couvert par ma modification.
+Ajoute-le, sans changer les deux autres cas, et donne-moi uniquement
+la difference.</pre>
+<div class="rep"><label>Ce que donnait le cas « aujourd'hui » avant, et après</label><textarea></textarea></div>
+
+<h2><span class="num">8</span>Une deuxième évolution, en autonomie</h2>
+<div class="piege"><b>Nouveau besoin</b> : « Dans le tableau, je veux repérer d'un coup d'œil les demandes clôturées. »</div>
+<p class="consigne">Reprenez les quatre temps, seul, sans relire les tâches précédentes.</p>
+<div class="rep"><label>Ma phrase vérifiable</label><textarea style="min-height:48px"></textarea></div>
+<div class="rep"><label>Ma demande en quatre blocs</label><textarea style="min-height:120px"></textarea></div>
+<div class="rep"><label>Ce que j'ai refusé cette fois</label><textarea></textarea></div>
+
+<h2><span class="num">9</span>Vérifier le périmètre global</h2>
+<pre>#changes
+Resume tout ce que j'ai modifie aujourd'hui, fichier par fichier.
+Signale ce qui sort des deux besoins : « echeance visible sur la fiche » et
+« demandes cloturees reperables dans le tableau ».</pre>
+<div class="rep"><label>Ce qui sort du périmètre — et ce que j'en fais</label><textarea></textarea></div>
+
+<h2><span class="num">10</span>Rendre compte en trois phrases</h2>
+<div class="rep"><label>Ce que j'ai fait · ce que j'ai refusé · ce que je vérifierais avec une heure de plus</label><textarea style="min-height:100px"></textarea></div>
+
+<div class="bilan">
+  <h3>Bilan de l'exercice 3</h3>
+  <ul>
+    <li>J'ai reformulé le besoin en une phrase vérifiable, <b>sans solution technique dedans</b>.</li>
+    <li>J'ai décrit <b>le comportement voulu</b>, pas l'implémentation.</li>
+    <li>J'ai relu la proposition <b>avant</b> de l'appliquer, avec la grille.</li>
+    <li>J'ai testé les <b>trois</b> cas : proche, dépassée, aujourd'hui.</li>
+    <li>Je peux nommer ce que j'ai refusé, sur chacune des deux évolutions.</li>
+  </ul>
+  <div class="rep" style="margin-top:.8rem;"><label>Ce que je retiens, en une phrase</label><textarea></textarea></div>
+</div>
+
+<div class="src">Références : <b>02_Codebase_TaskFlow</b> — <b>docs/architecture.md</b>, <b>docs/checklist-accessibilite.md</b> · module 10 du support.<br>
+Source : GitHub Docs, « Prompt engineering for Copilot Chat » · Guide des bonnes pratiques Sécurité — Transactis, sections 6 et 7.</div>
+
+<footer>Exercice 3 — <b>GitHub Copilot pour débutants · Transactis</b> — Digital House Company, hello@dhcompany.pro</footer>
+</div>
+</body>
+</html>

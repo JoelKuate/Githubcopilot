@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercice 5 — Prompt engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#0E8C86;--accent2:#0B6E68;--navy:#0B2D48;--text:#16212B;--text2:#4B5C63;--card:#EAF4F3;--border:#D7E6E4;--warn:#B9740A;--good:#1F9D67;--bad:#C1443B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.55;}
+.page{max-width:920px;margin:0 auto;padding:44px 32px 80px;}
+.kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:.4rem;}
+h1{font-size:2rem;color:var(--navy);margin-bottom:.35rem;}
+.sous{color:var(--text2);margin-bottom:1rem;}
+.bandeau{display:flex;gap:1.2rem;flex-wrap:wrap;margin:1.2rem 0 1.6rem;}
+.bandeau div{border:1px solid var(--border);border-radius:8px;padding:.55rem .9rem;background:var(--card);font-size:.9rem;color:var(--text2);min-width:150px;}
+.bandeau b{display:block;color:var(--navy);font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.15rem;}
+.meta{display:flex;gap:1.4rem;flex-wrap:wrap;margin:0 0 1.8rem;}
+.meta label{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);font-weight:700;display:block;margin-bottom:.22rem;}
+input[type=text],input[type=date]{font:inherit;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;min-width:190px;}
+.objectif{background:var(--card);border-left:4px solid var(--accent);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.6rem;color:var(--text2);}
+.objectif b{color:var(--navy);}
+h2{font-size:1.18rem;color:var(--navy);margin:2.3rem 0 .5rem;padding-top:1.2rem;border-top:2px solid var(--card);}
+h2 .num{display:inline-block;background:var(--navy);color:#fff;border-radius:6px;font-size:.82rem;padding:.12rem .5rem;margin-right:.5rem;vertical-align:middle;}
+.consigne{color:var(--text2);margin:.3rem 0 .6rem;}
+pre{background:#08202F;color:#D9EDEB;padding:.75rem 1rem;border-radius:8px;font-size:.87rem;line-height:1.5;overflow-x:auto;margin:.6rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;}
+.attendu{border:1px solid var(--border);border-left:4px solid var(--good);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.attendu b{color:var(--text);}
+.piege{background:#FFF8ED;border-left:4px solid var(--warn);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.rep{margin:.6rem 0 .3rem;}
+.rep label{display:block;font-size:.83rem;font-weight:700;color:var(--accent2);margin-bottom:.25rem;}
+textarea{width:100%;min-height:66px;font:inherit;padding:.55rem .7rem;border:1px solid var(--border);border-radius:8px;resize:vertical;background:#FCFEFE;}
+.track{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.12rem .48rem;border-radius:999px;margin-right:.3rem;}
+.tw{background:#E3F2F1;color:var(--accent2);} .tj{background:#FBEEDC;color:var(--warn);} .tt{background:#EAF0F6;color:var(--navy);}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;}
+th,td{border:1px solid var(--border);padding:.42rem .62rem;text-align:left;font-size:.92rem;vertical-align:top;}
+th{background:var(--card);color:var(--accent2);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;}
+td input[type=text]{border:none;width:100%;min-width:0;padding:.12rem;}
+.bilan{border:2px solid var(--accent);border-radius:10px;padding:1rem 1.2rem;margin-top:2.2rem;background:#F7FCFB;}
+.bilan h3{color:var(--navy);font-size:1.05rem;margin-bottom:.5rem;}
+.bilan li{color:var(--text2);margin-left:1.1rem;margin-bottom:.25rem;font-size:.95rem;}
+.src{font-size:.84rem;color:var(--text2);margin-top:.5rem;}
+.src a{color:var(--accent2);}
+.pdf{position:fixed;top:14px;right:18px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.55rem 1.1rem;font:600 .85rem 'Inter',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(11,45,72,.25);}
+footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--text2);font-size:.86rem;}
+@media print{.pdf{display:none;}body{font-size:10pt;}.page{padding:0;}h2{page-break-after:avoid;}textarea{min-height:54px;}}
+</style>
+</head>
+<body>
+<button class="pdf" onclick="window.print()">&#11015; Exporter en PDF</button>
+<div class="page">
+
+<p class="kicker">Exercice pratique 5 · prompt engineering</p>
+<h1>Bien demander : l'atelier du prompt</h1>
+<p class="sous">GitHub Copilot pour débutants — Transactis · terrain <b>TaskFlow</b></p>
+
+<div class="bandeau">
+  <div><b>Durée</b>50 minutes</div>
+  <div><b>Format</b>Individuel, comparaisons en binôme</div>
+  <div><b>Pistes</b><span class="track tt">les deux</span></div>
+  <div><b>Tâches</b>12 tâches pratiques</div>
+</div>
+
+<div class="meta">
+  <div><label for="nom">Nom</label><input type="text" id="nom"></div>
+  <div><label for="piste">Ma piste</label><input type="text" id="piste"></div>
+  <div><label for="date">Date</label><input type="date" id="date"></div>
+</div>
+
+<div class="objectif"><b>Objectif</b> — la différence entre une réponse inutilisable et une réponse exploitable tient presque toujours à <b>la demande</b>, pas au modèle. Cet exercice se fait entièrement sur TaskFlow, avec des demandes que vous réutiliserez dès lundi.<br>
+<b>Les quatre blocs</b> — <b>Contexte</b> (de quoi on parle) · <b>Tâche</b> (un verbe d'action) · <b>Contraintes</b> (ce qu'il ne faut pas faire) · <b>Résultat attendu</b> (la forme de la réponse).</div>
+
+<h2><span class="num">1</span>Mesurer le point de départ</h2>
+<p class="consigne">Dans une conversation neuve, envoyez exactement ceci, sans rien ajouter :</p>
+<pre>ameliore ce fichier</pre>
+<table>
+  <tr><th>Observation</th><th>Ma mesure</th></tr>
+  <tr><td>Nombre de lignes modifiées proposées</td><td><input type="text"></td></tr>
+  <tr><td>Fichiers touchés</td><td><input type="text"></td></tr>
+  <tr><td>Temps qu'il me faudrait pour relire</td><td><input type="text"></td></tr>
+  <tr><td>Est-ce que je peux défendre chaque ligne ?</td><td><input type="text"></td></tr>
+</table>
+
+<h2><span class="num">2</span>Ajouter un seul bloc : le contexte</h2>
+<pre>#file css/legacy-styles.css     (ou #file RapportLegacy.java)
+ameliore ce fichier</pre>
+<div class="rep"><label>Ce qui change par rapport à la tâche 1</label><textarea></textarea></div>
+
+<h2><span class="num">3</span>Ajouter la tâche — un verbe d'action précis</h2>
+<pre>#file css/legacy-styles.css
+Remplace les couleurs et espacements ecrits en dur par les jetons de
+css/variables.css.</pre>
+<div class="rep"><label>Ce qui change encore</label><textarea></textarea></div>
+
+<h2><span class="num">4</span>Ajouter les contraintes — le bloc le plus oublié</h2>
+<pre>#file css/legacy-styles.css
+Remplace les couleurs et espacements ecrits en dur par les jetons de
+css/variables.css.
+Contraintes : garder EXACTEMENT le meme rendu visuel ; ne pas toucher aux
+autres blocs ; aucun JavaScript ; ni selecteur par identifiant, ni !important.</pre>
+<div class="rep"><label>Ce que les contraintes ont empêché</label><textarea></textarea></div>
+<div class="attendu"><b>C'est ici que se joue la qualité.</b> Une contrainte est presque toujours une phrase <b>négative</b> : ce qu'il ne faut pas faire.</div>
+
+<h2><span class="num">5</span>Ajouter le résultat attendu — la forme de la réponse</h2>
+<pre>[... les trois blocs precedents ...]
+Resultat attendu : le bloc modifie seul, sans reecriture du fichier, avec un
+commentaire d'une ligne, et la liste de ce que je dois verifier moi-meme.</pre>
+<div class="rep"><label>La demande complète, aux quatre blocs, telle que je la garde</label><textarea style="min-height:140px"></textarea></div>
+<div class="rep"><label>Le gain mesuré entre la tâche 1 et la tâche 5</label><textarea></textarea></div>
+
+<h2><span class="num">6</span>Demander un format précis — trois fois la même question</h2>
+<p class="consigne">Même question, trois formats de réponse imposés. Comparez l'utilité.</p>
+<pre>A :  Explique-moi ce bloc.
+B :  Explique-moi ce bloc en trois puces maximum, sans code.
+C :  Explique-moi ce bloc sous forme de tableau : element | role | ou c'est utilise.</pre>
+<div class="rep"><label>Le format le plus utile pour moi, et pourquoi</label><textarea></textarea></div>
+
+<h2><span class="num">7</span>Donner un exemple plutôt qu'une explication</h2>
+<pre>Je veux une mention lisible a la place d'un nombre de jours.
+Exemples attendus :
+   5   ->  « echeance dans 5 jours »
+   0   ->  « echeance aujourd'hui »
+  -3   ->  « echeance depassee depuis 3 jours »
+Applique cette regle. Donne uniquement la partie modifiee.</pre>
+<div class="rep"><label>Un exemple vaut-il mieux qu'un paragraphe ? Ce que j'observe</label><textarea></textarea></div>
+
+<h2><span class="num">8</span>Écrire à Copilot <i>dans le code</i>, pas dans le chat</h2>
+<p class="consigne">Collez ce commentaire dans le fichier, à l'endroit exact où vous voulez le code, puis Entrée.</p>
+<pre>&lt;!-- Carte de demande : reference, badge de priorite en haut a droite,
+     objet sur deux lignes maximum, echeance en bas.
+     Classes prefixees tf-, aucune couleur en dur. --&gt;</pre>
+<div class="rep"><label>La suggestion obtenue — acceptée ou refusée, et pourquoi</label><textarea></textarea></div>
+<div class="attendu"><b>Deux écritures, deux usages</b> — dans le code, le prompt est un commentaire court à l'impératif ; dans le chat, c'est une demande structurée en quatre blocs. Le risque diffère aussi : accepter sans lire d'un côté, répondre hors sujet de l'autre.</div>
+
+<h2><span class="num">9</span>Relancer plutôt que tout redemander</h2>
+<p class="consigne">Sur une réponse qui ne convient pas, comparez deux façons de réagir.</p>
+<pre>A :  [je reformule toute ma demande depuis le debut]
+B :  Ta proposition touche aussi le bloc du pied de page. Reprends uniquement
+     le bloc de l'encart, le reste etait bon.</pre>
+<div class="rep"><label>Laquelle donne le meilleur résultat, pour le moins de tokens</label><textarea></textarea></div>
+
+<h2><span class="num">10</span>Transformer trois demandes floues — en autonomie</h2>
+<table>
+  <tr><th>Demande floue</th><th>Ma version en quatre blocs</th></tr>
+  <tr><td>« rends ça plus propre »</td><td><textarea style="min-height:74px"></textarea></td></tr>
+  <tr><td>« corrige le bug »</td><td><textarea style="min-height:74px"></textarea></td></tr>
+  <tr><td>« documente ce fichier »</td><td><textarea style="min-height:74px"></textarea></td></tr>
+</table>
+
+<h2><span class="num">11</span>Le prompt de sécurité — anonymiser avant d'envoyer</h2>
+<div class="piege">On vous demande de l'aide sur une erreur de production. Vous ne pouvez transmettre <b>aucune donnée réelle</b>.</div>
+<pre>Exemple a NE PAS envoyer :
+   Erreur sur la demande de [nom] (matricule [xxxxx]), service Comptabilite,
+   lors de l'appel a srv-prod-02.interne/api/v2/demandes avec le jeton eyJ...</pre>
+<div class="rep"><label>Ma version acceptable — plus courte, plus précise, sans rien de réel</label><textarea style="min-height:100px"></textarea></div>
+<div class="attendu"><b>La sécurité et la qualité vont dans le même sens</b> : la version anonymisée est plus courte, coûte moins de tokens, et donne une meilleure réponse.</div>
+
+<h2><span class="num">12</span>Mon prompt réutilisable</h2>
+<p class="consigne">Écrivez le prompt que vous garderez, celui que vous recollerez chaque semaine sur vos vrais projets.</p>
+<div class="rep"><label>Mon prompt type, aux quatre blocs, avec mes conventions à moi</label><textarea style="min-height:160px"></textarea></div>
+<div class="attendu"><b>Bonus</b> — ce prompt est exactement ce qu'on range dans un fichier de prompt ou une skill. C'est l'objet de l'exercice 6.</div>
+
+<div class="bilan">
+  <h3>Bilan de l'exercice 5</h3>
+  <ul>
+    <li>J'ai mesuré l'écart entre une demande floue et une demande à quatre blocs.</li>
+    <li>J'ai écrit au moins une <b>contrainte négative</b> dans chacune de mes demandes.</li>
+    <li>J'ai imposé un <b>format de réponse</b> au moins une fois.</li>
+    <li>J'ai relancé sur le point qui coince plutôt que tout redemander.</li>
+    <li>J'ai un prompt type, écrit avec mes conventions, prêt pour lundi.</li>
+  </ul>
+  <div class="rep" style="margin-top:.8rem;"><label>Ce que je retiens, en une phrase</label><textarea></textarea></div>
+</div>
+
+<div class="src">Référence : module 7 du support · commandes et variables : <b>04_Guides_Reference/Fiche_100_Commandes.html</b>.<br>
+Source : GitHub Docs, « Prompt engineering for Copilot Chat » — <a href="https://docs.github.com/en/copilot/concepts/prompting" target="_blank" rel="noopener">docs.github.com/copilot/concepts/prompting</a> · « Best practices for using GitHub Copilot » · Guide des bonnes pratiques Sécurité — Transactis, section 5.</div>
+
+<footer>Exercice 5 — <b>GitHub Copilot pour débutants · Transactis</b> — Digital House Company, hello@dhcompany.pro</footer>
+</div>
+</body>
+</html>

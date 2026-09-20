@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercice 1 — Comprendre le programme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#0E8C86;--accent2:#0B6E68;--navy:#0B2D48;--text:#16212B;--text2:#4B5C63;--card:#EAF4F3;--border:#D7E6E4;--warn:#B9740A;--good:#1F9D67;--bad:#C1443B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.55;}
+.page{max-width:920px;margin:0 auto;padding:44px 32px 80px;}
+.kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:.4rem;}
+h1{font-size:2rem;color:var(--navy);margin-bottom:.35rem;}
+.sous{color:var(--text2);margin-bottom:1rem;}
+.bandeau{display:flex;gap:1.2rem;flex-wrap:wrap;margin:1.2rem 0 1.6rem;}
+.bandeau div{border:1px solid var(--border);border-radius:8px;padding:.55rem .9rem;background:var(--card);font-size:.9rem;color:var(--text2);min-width:150px;}
+.bandeau b{display:block;color:var(--navy);font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.15rem;}
+.meta{display:flex;gap:1.4rem;flex-wrap:wrap;margin:0 0 1.8rem;}
+.meta label{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);font-weight:700;display:block;margin-bottom:.22rem;}
+input[type=text],input[type=date]{font:inherit;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;min-width:190px;}
+.objectif{background:var(--card);border-left:4px solid var(--accent);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.6rem;color:var(--text2);}
+.objectif b{color:var(--navy);}
+h2{font-size:1.18rem;color:var(--navy);margin:2.3rem 0 .5rem;padding-top:1.2rem;border-top:2px solid var(--card);}
+h2 .num{display:inline-block;background:var(--navy);color:#fff;border-radius:6px;font-size:.82rem;padding:.12rem .5rem;margin-right:.5rem;vertical-align:middle;}
+.consigne{color:var(--text2);margin:.3rem 0 .6rem;}
+pre{background:#08202F;color:#D9EDEB;padding:.75rem 1rem;border-radius:8px;font-size:.87rem;line-height:1.5;overflow-x:auto;margin:.6rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;}
+.attendu{border:1px solid var(--border);border-left:4px solid var(--good);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.attendu b{color:var(--text);}
+.piege{background:#FFF8ED;border-left:4px solid var(--warn);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.rep{margin:.6rem 0 .3rem;}
+.rep label{display:block;font-size:.83rem;font-weight:700;color:var(--accent2);margin-bottom:.25rem;}
+textarea{width:100%;min-height:66px;font:inherit;padding:.55rem .7rem;border:1px solid var(--border);border-radius:8px;resize:vertical;background:#FCFEFE;}
+.track{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.12rem .48rem;border-radius:999px;margin-right:.3rem;}
+.tw{background:#E3F2F1;color:var(--accent2);} .tj{background:#FBEEDC;color:var(--warn);} .tt{background:#EAF0F6;color:var(--navy);}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;}
+th,td{border:1px solid var(--border);padding:.42rem .62rem;text-align:left;font-size:.92rem;vertical-align:top;}
+th{background:var(--card);color:var(--accent2);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;}
+td input[type=text]{border:none;width:100%;min-width:0;padding:.12rem;}
+.bilan{border:2px solid var(--accent);border-radius:10px;padding:1rem 1.2rem;margin-top:2.2rem;background:#F7FCFB;}
+.bilan h3{color:var(--navy);font-size:1.05rem;margin-bottom:.5rem;}
+.bilan li{color:var(--text2);margin-left:1.1rem;margin-bottom:.25rem;font-size:.95rem;}
+.src{font-size:.84rem;color:var(--text2);margin-top:.5rem;}
+.src a{color:var(--accent2);}
+.pdf{position:fixed;top:14px;right:18px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.55rem 1.1rem;font:600 .85rem 'Inter',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(11,45,72,.25);}
+footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--text2);font-size:.86rem;}
+@media print{.pdf{display:none;}body{font-size:10pt;}.page{padding:0;}h2{page-break-after:avoid;}textarea{min-height:54px;}}
+</style>
+</head>
+<body>
+<button class="pdf" onclick="window.print()">&#11015; Exporter en PDF</button>
+<div class="page">
+
+<p class="kicker">Exercice pratique 1 · sur le programme</p>
+<h1>Comprendre un programme qu'on n'a pas écrit</h1>
+<p class="sous">GitHub Copilot pour débutants — Transactis · terrain <b>TaskFlow</b></p>
+
+<div class="bandeau">
+  <div><b>Durée</b>40 minutes</div>
+  <div><b>Format</b>Individuel, puis mise en commun</div>
+  <div><b>Pistes</b><span class="track tw">html/css</span><span class="track tj">java</span></div>
+  <div><b>Tâches</b>10 tâches pratiques</div>
+</div>
+
+<div class="meta">
+  <div><label for="nom">Nom</label><input type="text" id="nom"></div>
+  <div><label for="piste">Ma piste</label><input type="text" id="piste"></div>
+  <div><label for="date">Date</label><input type="date" id="date"></div>
+</div>
+
+<div class="objectif"><b>Objectif</b> — le premier usage professionnel de Copilot n'est pas d'écrire du code, c'est de <b>comprendre celui qu'on n'a pas écrit</b>. À la fin de cet exercice, vous savez cibler le bon niveau de question, et surtout <b>vérifier</b> ce que l'assistant vous répond.<br>
+<b>Règle du jour</b> — vous ne modifiez <b>aucun</b> fichier pendant cet exercice. Que de la lecture.</div>
+
+<h2><span class="num">1</span>Ouvrir et regarder avant de demander</h2>
+<p class="consigne"><span class="track tw">html/css</span> Ouvrez <b>index.html</b> dans un navigateur et <b>about.html</b>. <span class="track tj">java</span> Lancez <b>./run.sh</b> puis <b>./run.sh tests</b>.</p>
+<div class="attendu"><b>Attendu</b> — vous savez dire, sans Copilot : combien il y a de demandes, combien sont urgentes, combien d'échéances sont dépassées.</div>
+<div class="rep"><label>Ce que j'observe, en trois chiffres</label><textarea></textarea></div>
+<div class="piege">On ne pose jamais une question à Copilot sur un code qu'on n'a pas <b>au moins regardé</b> trente secondes. Sinon on ne peut pas juger la réponse.</div>
+
+<h2><span class="num">2</span>Niveau fichier — le rôle et les dépendances</h2>
+<pre>#file css/components.css          <span class="track tw">html/css</span>
+#file RechercheUtils.java         <span class="track tj">java</span>
+/explain
+Public : un developpeur qui decouvre ce projet aujourd'hui.
+Reponds en cinq lignes maximum. Ne propose aucune modification.</pre>
+<div class="attendu"><b>Attendu</b> — le rôle du fichier, ce qu'il expose, et sa place par rapport aux autres.</div>
+<div class="rep"><label>La réponse, résumée en une phrase à moi</label><textarea></textarea></div>
+
+<h2><span class="num">3</span>Niveau bloc — le plus rentable</h2>
+<p class="consigne">Sélectionnez <span class="track tw">html/css</span> le bloc <b>.tf-badge</b> et ses quatre variantes — <span class="track tj">java</span> la méthode <b>filtrerDemandes</b>. Puis :</p>
+<pre>#selection
+Que fait exactement ce bloc, et ou est-il utilise dans le projet ?
+Trois phrases. Aucune correction.</pre>
+<div class="rep"><label>Ce que fait le bloc</label><textarea></textarea></div>
+<div class="rep"><label>Où il est utilisé, d'après Copilot</label><textarea></textarea></div>
+
+<h2><span class="num">4</span>Vérifier la réponse — le geste central</h2>
+<p class="consigne">Allez vérifier <b>vous-même</b> l'affirmation de la tâche 3, dans le code et à l'écran.</p>
+<table>
+  <tr><th>Point à vérifier</th><th>Vrai / Faux</th><th>Où je l'ai vérifié</th></tr>
+  <tr><td>Les fichiers cités existent</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Les noms cités existent vraiment</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Le comportement décrit correspond à l'écran</td><td><input type="text"></td><td><input type="text"></td></tr>
+</table>
+<div class="piege"><b>Signal d'alerte n° 1</b> — une explication qui décrit une gestion d'erreur, un cas limite ou un comportement « responsive » que vous ne trouvez pas dans le code. C'est le cas d'invention le plus courant.</div>
+
+<h2><span class="num">5</span>Niveau ligne — lever un blocage précis</h2>
+<p class="consigne">Placez le curseur sur <span class="track tw">html/css</span> la ligne <b>--tf-couleur-accent</b> de <b>css/variables.css</b> — <span class="track tj">java</span> la ligne de calcul de <b>joursRestants</b>.</p>
+<pre>#line
+Explique cette ligne, et dis-moi ou sa valeur est reutilisee dans le projet.</pre>
+<div class="rep"><label>La réponse — et ce que j'ai trouvé moi-même en cherchant</label><textarea></textarea></div>
+
+<h2><span class="num">6</span>Comparer deux niveaux de question</h2>
+<p class="consigne">Posez la même question à deux niveaux différents, dans <b>deux conversations séparées</b>.</p>
+<pre>Conversation A :  #codebase   Comment fonctionne l'affichage des priorites ?
+Conversation B :  #selection  (sur le bloc des badges) Comment fonctionne l'affichage des priorites ?</pre>
+<table>
+  <tr><th></th><th>A — #codebase</th><th>B — #selection</th></tr>
+  <tr><td>Longueur de la réponse</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Précision</td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td>Vérifiable en combien de temps</td><td><input type="text"></td><td><input type="text"></td></tr>
+</table>
+<div class="attendu"><b>À retenir</b> — le plus petit contexte qui permet de répondre est toujours le bon. #selection avant #file, #file avant #codebase.</div>
+
+<h2><span class="num">7</span>Faire expliquer le code hérité</h2>
+<p class="consigne"><span class="track tw">html/css</span> <b>css/legacy-styles.css</b>, bloc <b>#encartAncien</b> — <span class="track tj">java</span> <b>RapportLegacy.construireRapport</b>.</p>
+<pre>#selection
+Explique ce que fait ce code, puis liste ce qui te parait discutable.
+Ne corrige rien : je veux seulement comprendre.</pre>
+<div class="rep"><label>Ce que Copilot trouve discutable</label><textarea style="min-height:88px"></textarea></div>
+<div class="rep"><label>Ce que <b>moi</b> je trouve discutable, et qu'il n'a pas dit</label><textarea></textarea></div>
+
+<h2><span class="num">8</span>Trouver où quelque chose est défini</h2>
+<pre>#codebase
+Ou la mention « echeance depassee » est-elle produite, et sur quelles pages
+apparait-elle ?</pre>
+<div class="rep"><label>La réponse, vérifiée fichier par fichier</label><textarea></textarea></div>
+<div class="piege">Si la réponse cite un fichier qui n'existe pas dans le projet, notez-le : c'est un exemple parfait à montrer à la mise en commun.</div>
+
+<h2><span class="num">9</span>Le piège du nom qui ment</h2>
+<p class="consigne"><span class="track tj">java</span> Faites expliquer <b>joursRestants</b> sans rien dire d'autre. <span class="track tw">html/css</span> Faites expliquer la classe <b>.tf-echeance--proche</b> en demandant « à quoi sert-elle exactement ? ».</p>
+<div class="rep"><label>Ce que le nom promet</label><textarea style="min-height:52px"></textarea></div>
+<div class="rep"><label>Ce que le code fait réellement</label><textarea style="min-height:52px"></textarea></div>
+<div class="attendu"><b>Le point clé de l'exercice</b> — l'assistant décrit ce que le code fait, mot pour mot. Il ne dit presque jamais spontanément que le code fait <b>autre chose que ce que son nom promet</b>. Repérer cet écart reste votre travail.</div>
+
+<h2><span class="num">10</span>Restituer sans l'outil</h2>
+<p class="consigne">Fermez le Chat. Expliquez le projet à votre voisin en <b>trois phrases</b>, sans relire vos notes.</p>
+<div class="rep"><label>Mes trois phrases</label><textarea style="min-height:92px"></textarea></div>
+
+<div class="bilan">
+  <h3>Bilan de l'exercice 1</h3>
+  <ul>
+    <li>J'ai posé au moins une question à chacun des trois niveaux : fichier, bloc, ligne.</li>
+    <li>J'ai vérifié <b>moi-même</b> au moins trois affirmations de Copilot.</li>
+    <li>J'ai relevé au moins un écart entre l'explication et le code.</li>
+    <li>Je n'ai modifié aucun fichier.</li>
+  </ul>
+  <div class="rep" style="margin-top:.8rem;"><label>Ce que je retiens, en une phrase</label><textarea></textarea></div>
+</div>
+
+<div class="src">Références : <b>02_Codebase_TaskFlow</b> et son <b>docs/architecture.md</b> · variables et commandes : <b>04_Guides_Reference/Fiche_100_Commandes.html</b> · méthode : module 6 du support.<br>
+Source : GitHub Docs, « Prompt engineering for Copilot Chat » et « Best practices for using GitHub Copilot ».</div>
+
+<footer>Exercice 1 — <b>GitHub Copilot pour débutants · Transactis</b> — Digital House Company, hello@dhcompany.pro</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercice 4 — Vérifier, tester, documenter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#0E8C86;--accent2:#0B6E68;--navy:#0B2D48;--text:#16212B;--text2:#4B5C63;--card:#EAF4F3;--border:#D7E6E4;--warn:#B9740A;--good:#1F9D67;--bad:#C1443B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;line-height:1.55;}
+.page{max-width:920px;margin:0 auto;padding:44px 32px 80px;}
+.kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:.4rem;}
+h1{font-size:2rem;color:var(--navy);margin-bottom:.35rem;}
+.sous{color:var(--text2);margin-bottom:1rem;}
+.bandeau{display:flex;gap:1.2rem;flex-wrap:wrap;margin:1.2rem 0 1.6rem;}
+.bandeau div{border:1px solid var(--border);border-radius:8px;padding:.55rem .9rem;background:var(--card);font-size:.9rem;color:var(--text2);min-width:150px;}
+.bandeau b{display:block;color:var(--navy);font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;margin-bottom:.15rem;}
+.meta{display:flex;gap:1.4rem;flex-wrap:wrap;margin:0 0 1.8rem;}
+.meta label{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent2);font-weight:700;display:block;margin-bottom:.22rem;}
+input[type=text],input[type=date]{font:inherit;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;min-width:190px;}
+.objectif{background:var(--card);border-left:4px solid var(--accent);border-radius:6px;padding:.85rem 1.1rem;margin-bottom:1.6rem;color:var(--text2);}
+.objectif b{color:var(--navy);}
+h2{font-size:1.18rem;color:var(--navy);margin:2.3rem 0 .5rem;padding-top:1.2rem;border-top:2px solid var(--card);}
+h2 .num{display:inline-block;background:var(--navy);color:#fff;border-radius:6px;font-size:.82rem;padding:.12rem .5rem;margin-right:.5rem;vertical-align:middle;}
+.consigne{color:var(--text2);margin:.3rem 0 .6rem;}
+pre{background:#08202F;color:#D9EDEB;padding:.75rem 1rem;border-radius:8px;font-size:.87rem;line-height:1.5;overflow-x:auto;margin:.6rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;}
+.attendu{border:1px solid var(--border);border-left:4px solid var(--good);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.attendu b{color:var(--text);}
+.piege{background:#FFF8ED;border-left:4px solid var(--warn);border-radius:6px;padding:.55rem .85rem;font-size:.92rem;color:var(--text2);margin:.5rem 0;}
+.rep{margin:.6rem 0 .3rem;}
+.rep label{display:block;font-size:.83rem;font-weight:700;color:var(--accent2);margin-bottom:.25rem;}
+textarea{width:100%;min-height:66px;font:inherit;padding:.55rem .7rem;border:1px solid var(--border);border-radius:8px;resize:vertical;background:#FCFEFE;}
+.track{display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.12rem .48rem;border-radius:999px;margin-right:.3rem;}
+.tw{background:#E3F2F1;color:var(--accent2);} .tj{background:#FBEEDC;color:var(--warn);} .tt{background:#EAF0F6;color:var(--navy);}
+table{border-collapse:collapse;width:100%;margin:.6rem 0;}
+th,td{border:1px solid var(--border);padding:.42rem .62rem;text-align:left;font-size:.92rem;vertical-align:top;}
+th{background:var(--card);color:var(--accent2);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;}
+td input[type=text]{border:none;width:100%;min-width:0;padding:.12rem;}
+.bilan{border:2px solid var(--accent);border-radius:10px;padding:1rem 1.2rem;margin-top:2.2rem;background:#F7FCFB;}
+.bilan h3{color:var(--navy);font-size:1.05rem;margin-bottom:.5rem;}
+.bilan li{color:var(--text2);margin-left:1.1rem;margin-bottom:.25rem;font-size:.95rem;}
+.src{font-size:.84rem;color:var(--text2);margin-top:.5rem;}
+.src a{color:var(--accent2);}
+.pdf{position:fixed;top:14px;right:18px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.55rem 1.1rem;font:600 .85rem 'Inter',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(11,45,72,.25);}
+footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--text2);font-size:.86rem;}
+@media print{.pdf{display:none;}body{font-size:10pt;}.page{padding:0;}h2{page-break-after:avoid;}textarea{min-height:54px;}}
+</style>
+</head>
+<body>
+<button class="pdf" onclick="window.print()">&#11015; Exporter en PDF</button>
+<div class="page">
+
+<p class="kicker">Exercice pratique 4 · sur le programme</p>
+<h1>Vérifier, tester et documenter le programme</h1>
+<p class="sous">GitHub Copilot pour débutants — Transactis · terrain <b>TaskFlow</b></p>
+
+<div class="bandeau">
+  <div><b>Durée</b>60 minutes</div>
+  <div><b>Format</b>Individuel, puis en binôme</div>
+  <div><b>Pistes</b><span class="track tw">html/css</span><span class="track tj">java</span></div>
+  <div><b>Tâches</b>12 tâches pratiques</div>
+</div>
+
+<div class="meta">
+  <div><label for="nom">Nom</label><input type="text" id="nom"></div>
+  <div><label for="piste">Ma piste</label><input type="text" id="piste"></div>
+  <div><label for="binome">Mon binôme</label><input type="text" id="binome"></div>
+</div>
+
+<div class="objectif"><b>Objectif</b> — c'est le moment de la journée où l'outil vous montre qu'il peut <b>se tromper avec assurance</b>. Vous allez le laisser se tromper, le constater, puis le prouver.<br>
+<b>L'ordre correct</b> — j'écris le résultat attendu · je vérifie · je regarde l'écart · je corrige. Jamais l'inverse.</div>
+
+<h2><span class="num">1</span>Établir l'état de départ</h2>
+<p class="consigne"><span class="track tw">html/css</span> Il y a exactement <b>cinq</b> écarts d'accessibilité dans <b>index.html</b> et <b>nouvelle-demande.html</b>. La page a l'air normale.<br>
+<span class="track tj">java</span> Lancez <b>./run.sh tests</b> : <b>14 / 16</b>, deux en échec.</p>
+<div class="rep"><label>Mon état de départ, noté noir sur blanc</label><textarea style="min-height:52px"></textarea></div>
+
+<h2><span class="num">2</span>Faire passer la page au crible — sans correction</h2>
+<pre>#file index.html                            <span class="track tw">html/css</span>
+Passe cette page au crible de docs/checklist-accessibilite.md, point par point.
+Pour chaque point : conforme ou non, et la ligne concernee.
+NE PROPOSE AUCUNE CORRECTION.</pre>
+<pre>#file DateUtils.java   (selection : joursRestants)      <span class="track tj">java</span>
+Deux tests echouent sur cette methode : attendu 31 obtenu 1, attendu 6 obtenu -25.
+Explique la CAUSE. Ne propose pas de correction.</pre>
+<div class="rep"><label>Ce que Copilot annonce</label><textarea style="min-height:100px"></textarea></div>
+
+<h2><span class="num">3</span>Vérifier chaque affirmation, dans le code</h2>
+<table>
+  <tr><th>Affirmation de Copilot</th><th>Vraie ?</th><th>Ligne vérifiée</th></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+  <tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+</table>
+<div class="rep"><label>Ce qu'il a <b>inventé</b> — annoncé mais inexistant</label><textarea></textarea></div>
+
+<h2><span class="num">4</span>Trouver ce qu'il a manqué</h2>
+<p class="consigne">Reprenez la checklist — ou le code — <b>vous-même</b>, ligne à ligne. Il manque au moins un écart réel à sa liste.</p>
+<div class="rep"><label>Ce qu'il a manqué, et comment je l'ai trouvé</label><textarea style="min-height:70px"></textarea></div>
+<div class="attendu"><b>C'est la tâche la plus importante de la journée.</b> Une liste produite par un assistant n'est ni complète ni fiable : elle est un point de départ.</div>
+
+<h2><span class="num">5</span>Corriger, un écart à la fois</h2>
+<pre>#selection
+Corrige uniquement cet ecart : [decrire l'ecart].
+Contraintes : HTML et CSS uniquement, AUCUN JavaScript, aucune couleur hors
+css/variables.css, rendu visuel inchange.
+Resultat : la difference seule.</pre>
+<div class="piege"><b>Le piège attendu</b> — sur l'action en <code>div</code> cliquable, l'assistant propose volontiers un <code>onclick</code>, donc du JavaScript, que le projet interdit. Si cela arrive : notez-le, refusez, et reformulez.</div>
+<div class="rep"><label>A-t-il proposé quelque chose d'interdit ? Quoi ?</label><textarea></textarea></div>
+
+<h2><span class="num">6</span>Repasser la checklist entière</h2>
+<div class="rep"><label>Les points désormais conformes, et ceux qui restent</label><textarea style="min-height:88px"></textarea></div>
+
+<h2><span class="num">7</span>Tester au clavier — ce qu'aucun assistant ne fait</h2>
+<p class="consigne">Fermez la souris. Parcourez la page avec <b>Tab</b> seul.</p>
+<table>
+  <tr><th>Vérification clavier</th><th>OK ?</th></tr>
+  <tr><td>Chaque élément interactif est atteignable</td><td><input type="text"></td></tr>
+  <tr><td>L'ordre de parcours est logique</td><td><input type="text"></td></tr>
+  <tr><td>Le focus reste visible en permanence</td><td><input type="text"></td></tr>
+  <tr><td>L'action principale s'active avec Entrée ou Espace</td><td><input type="text"></td></tr>
+</table>
+
+<h2><span class="num">8</span>Générer un test — et constater la limite</h2>
+<p class="consigne"><span class="track tj">java</span> <b>Avant</b> de corriger le bug, demandez des tests pour <b>joursRestants</b>.</p>
+<pre>/tests #selection
+Genere trois cas de test pour cette methode.</pre>
+<div class="rep"><label>Les tests produits valident-ils le comportement <b>voulu</b>, ou le comportement <b>actuel</b> — bug compris ?</label><textarea style="min-height:70px"></textarea></div>
+<div class="attendu"><b>Le point clé</b> — un test décrit ce que le code <b>devrait</b> faire. Cette intention, vous êtes le seul à la connaître. Générer un test n'est pas exécuter un test.</div>
+
+<h2><span class="num">9</span>Corriger, puis prouver</h2>
+<pre>#selection
+Corrige la cause identifiee.
+Contraintes : bibliotheque standard uniquement, java.time, signature et
+commentaire conserves.
+Resultat : la methode modifiee seule.</pre>
+<div class="rep"><label><span class="track tj">java</span> Résultat de <b>./run.sh tests</b> après correction — <span class="track tw">html/css</span> checklist repassée</label><textarea style="min-height:52px"></textarea></div>
+<div class="rep"><label>Les trois cas de test que j'ai ajoutés moi-même</label><textarea style="min-height:70px"></textarea></div>
+
+<h2><span class="num">10</span>Documenter ce que je viens de corriger</h2>
+<pre>/doc #selection
+Format : un commentaire d'en-tete donnant le role, ce qui est utilise ou par
+qui, les cas limites, et CE QU'IL NE FAUT PAS Y CHANGER.
+Pas de paraphrase ligne a ligne.</pre>
+<div class="rep"><label>Le commentaire obtenu, corrigé par moi</label><textarea style="min-height:88px"></textarea></div>
+<div class="rep"><label>Le <b>pourquoi</b> que j'ai dû ajouter — l'assistant ne pouvait pas le connaître</label><textarea></textarea></div>
+
+<h2><span class="num">11</span>Le test du collègue</h2>
+<p class="consigne">Échangez avec votre binôme. Lisez sa documentation <b>sans lire son code</b>.</p>
+<table>
+  <tr><th>Question</th><th>Réponse en lisant la doc seule</th></tr>
+  <tr><td>Que fait ce code ?</td><td><input type="text"></td></tr>
+  <tr><td>Que se passe-t-il si l'entrée est vide ou absente ?</td><td><input type="text"></td></tr>
+  <tr><td>Qu'est-ce qu'il ne faut pas y changer ?</td><td><input type="text"></td></tr>
+</table>
+<div class="rep"><label>Le nombre de fois où j'ai dû ouvrir le code — chacune est un manque à combler</label><textarea style="min-height:48px"></textarea></div>
+
+<h2><span class="num">12</span>Bilan croisé</h2>
+<div class="rep"><label>Ce que mon binôme a relevé dans ma documentation</label><textarea></textarea></div>
+<div class="rep"><label>Ce que j'ai relevé dans la sienne</label><textarea></textarea></div>
+
+<div class="bilan">
+  <h3>Bilan de l'exercice 4</h3>
+  <ul>
+    <li>J'ai demandé la <b>cause avant la correction</b>.</li>
+    <li>J'ai vérifié chaque affirmation moi-même, dans le code.</li>
+    <li>J'ai identifié au moins une <b>invention</b> et au moins un <b>oubli</b> de l'assistant.</li>
+    <li>J'ai testé au clavier — ce qu'aucun assistant ne fait à ma place.</li>
+    <li>J'ai une preuve : checklist repassée, ou tests au vert.</li>
+    <li>Ma documentation a passé le test du collègue.</li>
+  </ul>
+  <div class="rep" style="margin-top:.8rem;"><label>Ce que je retiens, en une phrase</label><textarea></textarea></div>
+</div>
+
+<div class="src">Références : <b>02_Codebase_TaskFlow/web/docs/checklist-accessibilite.md</b> · <b>java/docs/checklist-qualite.md</b> · modules 11 et 12 du support.<br>
+Source : GitHub Docs, « Best practices for using GitHub Copilot » — vérifier le travail de Copilot · Guide des bonnes pratiques Sécurité — Transactis, sections 6 et 7.</div>
+
+<footer>Exercice 4 — <b>GitHub Copilot pour débutants · Transactis</b> — Digital House Company, hello@dhcompany.pro</footer>
+</div>
+</body>
+</html>
